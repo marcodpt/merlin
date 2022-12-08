@@ -1,36 +1,22 @@
-import {patch, h, text, router, tint} from './dependencies.js'
-
-const compile = tint(h, text)
+import tint from 'https://cdn.jsdelivr.net/gh/marcodpt/tint/superfine.js'
 
 export default ({
-  home,
-  rejected,
-  pending,
-  routes
+  node,
+  data,
+  actions
 }) => {
-  const node = document.getElementById(home)
-  const render = compile(node)
-  Object.keys(routes).forEach(path => {
-    const {view, init, update, actions} = routes[path]
-    var state = null
-    const setView = () => {
-      patch(node, render(view, state))
-    }
-    router(path, ({params, query}) => Promise.resolve()
-      .then(() => init(params, query))
-      .then(res => {
-        state = res
-        return actions(state, setView)
-      })
-      .then(res => {
-        Object.keys(res).forEach(key => {
-          state[key] = () => {
-            res[key].apply(null, arguments)
-            setView()
-          }
-        })
-        setView()
-      })
-    )
-  })
+  const state = typeof data == 'function' ? data() : data
+  const patch = tint(node)
+  const render = () => patch(state)
+  if (actions && (state != null && typeof state == 'object')) {
+    const f = actions(state, render)
+    Object.keys(f).forEach(key => {
+      state[key] = function () {
+        const res = f[key].apply(null, arguments)
+        render()
+        return res
+      }
+    })
+  }
+  render()
 }

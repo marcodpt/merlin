@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Merlin TODO</title>
+    <link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/water.css">
+    <script type="module">
+      import merlin from '../index.js'
+
+      merlin({
+        node: document.getElementById('app'),
+        data: () => ({
+          value: "",
+          todos: []
+        }),
+        actions: state => ({
+          AddTodo: () => {
+            state.todos.push(state.value)
+            state.value = ""
+          },
+          NewValue: ev => {
+            state.value = ev.target.value
+          }
+        })
+      })
+    </script>
+  </head>
+  <body>
+    <main id="app">
+      <h1>To do list</h1>
+      <input type="text" :value="value" :oninput="NewValue">
+      <ul>
+        <li :each="todos" :text></li>
+      </ul>
+      <button :onclick="AddTodo">New!</button>
+    </main>
+  </body>
+</html>

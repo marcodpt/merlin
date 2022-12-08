@@ -1,2 +1,2 @@
-# merlin
-The merlin JS framework
+# Merlin
+The Merlin JS framework
