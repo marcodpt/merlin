@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Merlin stopwatch</title>
+    <link rel="shortcut icon" type="image/x-icon" href="../favicon.ico">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/water.css">
+    <script type="module">
+      import merlin from '../index.js'
+
+      const format = n => n.toFixed(3)
+
+      window.drop = merlin({
+        node: document.getElementById('app'),
+        data: {
+          offset: 0,
+          clock: 0,
+          view: format(0),
+          interval: null
+        },
+        init: (data, render) => ({
+          reset: () => {
+            data.stop()
+            data.offset = 0
+            data.clock = 0
+            data.view = format(0)
+          },
+          stop: () => {
+            clearInterval(data.interval)
+            data.interval = null
+          },
+          start: () => {
+            data.offset = Date.now()
+            if (data.interval == null) {
+              data.interval = setInterval(() => {
+                const now = Date.now()
+                data.clock += (now - data.offset) / 1000;
+                data.offset = now
+                data.view = format(data.clock)
+                render()
+              }, 100)
+            }
+          }
+        }),
+        drop: data => {
+          data.stop()
+        }
+      })
+    </script>
+  </head>
+  <body>
+    <main id="app">
+      <h1>Stopwatch</h1>
+      <h2 :text="view">Loading...</h2>
+      <button :onclick="start">Start</button>
+      <button :onclick="stop">Stop</button>
+      <button :onclick="reset">Reset</button>
+    </main>
+    <button onclick="drop()">Drop component</button>
+  </body>
+</html>
