@@ -8,24 +8,23 @@
     <link rel="shortcut icon" type="image/x-icon" href="../favicon.ico">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/water.css">
     <script type="module">
-      import merlin from '../index.js'
+      import component from '../index.js'
 
-      merlin({
-        node: document.getElementById('app'),
-        data: {
+      const todo = component({
+        init: update => ({
           value: "",
-          todos: []
-        },
-        init: data => ({
-          AddTodo: () => {
-            data.todos.push(data.value)
-            data.value = ""
-          },
-          NewValue: ev => {
-            data.value = ev.target.value
-          }
+          todos: [],
+          AddTodo: () => update(({todos, value}) => ({
+            todos: todos.concat(value),
+            value: ""
+          })),
+          NewValue: ev => update(() => ({
+            value: ev.target.value
+          }))
         })
       })
+
+      todo(document.getElementById('app'))
     </script>
   </head>
   <body>

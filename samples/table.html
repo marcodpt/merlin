@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Merlin table</title>
+    <link rel="shortcut icon" type="image/x-icon" href="../favicon.ico">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/water.css">
+    <script type="module">
+      import component from '../index.js'
+      import data from './data.js'
+
+      const load = callback => setTimeout(() => callback(data), 1000)
+
+      const table = component({
+        init: update => ({
+          rows: setTimeout(() => update(() => ({
+            rows: data
+          })), 1000)
+        })
+      })
+
+      table(document.getElementById('app'))
+    </script>
+  </head>
+  <body>
+    <main id="app">
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Age</th>
+            <th>Balance ($)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr :each="rows">
+            <td :text="name"></td>
+            <td :text="age"></td>
+            <td :text="balance"></td>
+          </tr>
+        </tbody>
+      </table>
+    </main>
+  </body>
+</html>

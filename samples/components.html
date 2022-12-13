@@ -4,15 +4,16 @@
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Merlin counter</title>
+    <title>Merlin components</title>
     <link rel="shortcut icon" type="image/x-icon" href="../favicon.ico">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/water.css">
     <script type="module">
       import component from '../index.js'
 
       const counter = component({
-        init: update => ({
-          count: 0,
+        template: document.getElementById('counter'),
+        init: (update, {count}) => ({
+          count: isNaN(count) ? 0 : parseInt(count),
           inc: () => update(({count}) => ({
             count: count + 1
           })),
@@ -22,14 +23,29 @@
         })
       })
 
-      counter(document.getElementById('app'))
+      document.body.querySelectorAll('my-counter').forEach(e => {
+        const x = document.createElement('div')
+        e.replaceWith(x)
+        counter(x, Array.from(e.attributes).reduce((attrs, {
+          nodeName,
+          nodeValue
+        }) => ({
+          ...attrs,
+          [nodeName]: nodeValue
+        }), {}))
+      })
     </script>
   </head>
   <body>
-    <main id="app">
+    <main>
+      <my-counter></my-counter>
+      <my-counter count="3"></my-counter>
+      <my-counter count="7"></my-counter>
+    </main>
+    <template id="counter">
       <h1 :text="count">Counter</h1>
       <button :onclick="dec">-</button>
       <button :onclick="inc">+</button>
-    </main>
+    </template>
   </body>
 </html>
