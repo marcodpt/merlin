@@ -1,7 +1,7 @@
 # ![](favicon.ico) The Merlin JS framework
  - No building tools. Use a regular html file as a Single File Component.
  - Server side rendered by default
-([templates](https://marcodpt.github.io/tint/) are valid html).
+([templates](https://marcodpt.github.io/tint/syntax/intro.html) are valid html).
  - Ridiculously small API. After reading this file you will understand `Merlin`
 better than me.
  - Ultrafast [vDom](https://github.com/jorgebucaran/superfine).
@@ -108,7 +108,7 @@ called, if it was present in `state`.
 
 ## Template engine
 Merlin uses [Tint](https://github.com/marcodpt/tint) as its template engine,
-you should read the [docs](https://marcodpt.github.io/tint/) for a complete
+you should read the [docs](https://marcodpt.github.io/tint/syntax/intro.html) for a complete
 reference.
 
 ## Contributing
