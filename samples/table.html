@@ -12,12 +12,47 @@
       import merlin from '../index.js'
       import data from './data.js'
 
-      const load = callback => setTimeout(() => callback(data), 1000)
+      const sort = (update, k) => () => update(({
+        rows,
+        reverse,
+        sort
+      }) => {
+        const r = sort == k && reverse == 1 ? -1 : 1
+        rows.sort((a, b) => r * (a[k] < b[k] ? -1 : a[k] > b[k] ? 1 : 0))
+        return {
+          reverse: r,
+          sort: k
+        }
+      })
+
+      const totals = rows => ({
+        count: rows.length,
+        avg_age: (
+          rows.reduce((total, {age}) => total + age, 0) / (rows.length || 1)
+        ).toFixed(0),
+        sum_balance: rows.reduce((total, {balance}) => total + balance, 0)
+          .toFixed(2)
+      })
 
       merlin(document.getElementById('app'), update => ({
-        rows: setTimeout(() => update({
-          rows: data
-        }), 1000)
+        reverse: 1,
+        sort: 'id',
+        sort_id: sort(update, 'id'),
+        sort_name: sort(update, 'name'),
+        sort_age: sort(update, 'age'),
+        sort_balance: sort(update, 'balance'),
+        ...totals(data),
+        rows: data.map((row, i) => ({
+          ...row,
+          id: i+1,
+          delete: () => update(({rows}) => {
+            rows.splice(rows.map((row, pos) => ({
+              ...row,
+              pos
+            })).filter(({id}) => id == i+1)[0].pos, 1)
+            return totals(rows)
+          })
+        }))
       }))
     </script>
   </head>
@@ -27,13 +62,24 @@
       <table>
         <thead>
           <tr>
-            <th>Name</th>
-            <th>Age</th>
-            <th>Balance ($)</th>
+            <td></td>
+            <td :text="count"></td>
+            <td></td>
+            <td :text="avg_age"></td>
+            <td :text="sum_balance"></td>
+          </tr>
+          <tr>
+            <th>Delete</th>
+            <th><a href="javascript:;" :onclick="sort_id">Id</a></th>
+            <th><a href="javascript:;" :onclick="sort_name">Name</a></th>
+            <th><a href="javascript:;" :onclick="sort_age">Age</a></th>
+            <th><a href="javascript:;" :onclick="sort_balance">Balance ($)</a></th>
           </tr>
         </thead>
         <tbody>
           <tr :each="rows">
+            <td><a href="javascript:;" :onclick="delete">Delete</a></td>
+            <td :text="id"></td>
             <td :text="name"></td>
             <td :text="age"></td>
             <td :text="balance"></td>
