@@ -8,11 +8,11 @@
     <link rel="shortcut icon" type="image/x-icon" href="../favicon.ico">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/water.css">
     <script type="module">
-      import component from '../index.js'
+      import merlin from '../index.js'
 
-      const counter = component({
-        template: document.getElementById('counter'),
-        init: (update, {count}) => ({
+      document.body
+        .querySelectorAll('my-counter')
+        .forEach(e => merlin(e, (update, {count}) => ({
           count: isNaN(count) ? 0 : parseInt(count),
           inc: () => update(({count}) => ({
             count: count + 1
@@ -20,20 +20,7 @@
           dec: () => update(({count}) => ({
             count: count - 1
           }))
-        })
-      })
-
-      document.body.querySelectorAll('my-counter').forEach(e => {
-        const x = document.createElement('div')
-        e.replaceWith(x)
-        counter(x, Array.from(e.attributes).reduce((attrs, {
-          nodeName,
-          nodeValue
-        }) => ({
-          ...attrs,
-          [nodeName]: nodeValue
-        }), {}))
-      })
+        }), document.getElementById('my-counter')))
     </script>
   </head>
   <body>
@@ -42,7 +29,7 @@
       <my-counter count="3"></my-counter>
       <my-counter count="7"></my-counter>
     </main>
-    <template id="counter">
+    <template id="my-counter">
       <h1 :text="count">Counter</h1>
       <button :onclick="dec">-</button>
       <button :onclick="inc">+</button>

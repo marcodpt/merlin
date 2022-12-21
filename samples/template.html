@@ -8,11 +8,9 @@
     <link rel="shortcut icon" type="image/x-icon" href="../favicon.ico">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/water.css">
     <script type="module">
-      import component from '../index.js'
-      const render = component({
-        init: (update, params) => update(() => params)
-      })
-      render(document.getElementById('app'), {
+      import merlin from '../index.js'
+
+      merlin(document.getElementById('app'), {
         title: 'This is my home page',
         description: 'An awesome home page build with Merlin as template engine!'
       })

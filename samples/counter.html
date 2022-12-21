@@ -8,21 +8,17 @@
     <link rel="shortcut icon" type="image/x-icon" href="../favicon.ico">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/water.css">
     <script type="module">
-      import component from '../index.js'
+      import merlin from '../index.js'
 
-      const counter = component({
-        init: update => ({
-          count: 0,
-          inc: () => update(({count}) => ({
-            count: count + 1
-          })),
-          dec: () => update(({count}) => ({
-            count: count - 1
-          }))
-        })
-      })
-
-      counter(document.getElementById('app'))
+      merlin(document.getElementById('app'), update => ({
+        count: 0,
+        inc: () => update(({count}) => ({
+          count: count + 1
+        })),
+        dec: () => update(({count}) => ({
+          count: count - 1
+        }))
+      }))
     </script>
   </head>
   <body>

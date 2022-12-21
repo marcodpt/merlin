@@ -8,44 +8,40 @@
     <link rel="shortcut icon" type="image/x-icon" href="../favicon.ico">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/water.css">
     <script type="module">
-      import component from '../index.js'
+      import merlin from '../index.js'
 
       const format = n => n.toFixed(3)
 
-      const stopwatch = component({
-        init: update => ({
-          offset: 0,
+      window.drop = merlin(document.getElementById('app'), update => ({
+        offset: 0,
+        clock: 0,
+        view: format(0),
+        interval: null,
+        stop: () => update(({interval}) => ({
+          interval: clearInterval(interval)
+        })),
+        reset: () => update(() => ({
+          offset: Date.now(),
           clock: 0,
-          view: format(0),
-          interval: null,
-          stop: () => update(({interval}) => ({
-            interval: clearInterval(interval)
-          })),
-          reset: () => update(() => ({
-            offset: Date.now(),
-            clock: 0,
-            view: format(0)
-          })),
-          start: () => update(({interval}) => ({
-            offset: Date.now(),
-            interval: interval || setInterval(() => update(({
-              offset,
-              clock
-            }) => {
-              const now = Date.now()
-              clock += (now - offset) / 1000
-              return {
-                clock: clock,
-                offset: now,
-                view: format(clock)
-              }
-            }), 100)
-          }))
-        }),
+          view: format(0)
+        })),
+        start: () => update(({interval}) => ({
+          offset: Date.now(),
+          interval: interval || setInterval(() => update(({
+            offset,
+            clock
+          }) => {
+            const now = Date.now()
+            clock += (now - offset) / 1000
+            return {
+              clock: clock,
+              offset: now,
+              view: format(clock)
+            }
+          }), 100)
+        })),
         drop: ({stop}) => stop()
-      })
-
-      window.drop = stopwatch(document.getElementById('app'))
+      }))
     </script>
   </head>
   <body>

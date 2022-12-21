@@ -8,7 +8,7 @@
     <link rel="shortcut icon" type="image/x-icon" href="../favicon.ico">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/water.css">
     <script type="module">
-      import component from '../index.js'
+      import merlin from '../index.js'
 
       const format = n => (n < 10 ? '0' : '')+n
       const getTime = () => {
@@ -18,17 +18,13 @@
           format(d.getSeconds())
       }
 
-      const clock = component({
-        init: update => ({
-          time: getTime(),
-          interval: setInterval(() => update(() => ({
-            time: getTime()
-          })), 100)
-        }),
+      window.drop = merlin(document.getElementById('app'), update => ({
+        time: getTime(),
+        interval: setInterval(() => update(() => ({
+          time: getTime()
+        })), 100),
         drop: ({interval}) => clearInterval(interval)
-      })
-
-      window.drop = clock(document.getElementById('app'))
+      }))
     </script>
   </head>
   <body>

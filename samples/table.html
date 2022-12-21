@@ -8,20 +8,16 @@
     <link rel="shortcut icon" type="image/x-icon" href="../favicon.ico">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/water.css">
     <script type="module">
-      import component from '../index.js'
+      import merlin from '../index.js'
       import data from './data.js'
 
       const load = callback => setTimeout(() => callback(data), 1000)
 
-      const table = component({
-        init: update => ({
-          rows: setTimeout(() => update(() => ({
-            rows: data
-          })), 1000)
-        })
-      })
-
-      table(document.getElementById('app'))
+      merlin(document.getElementById('app'), update => ({
+        rows: setTimeout(() => update({
+          rows: data
+        }), 1000)
+      }))
     </script>
   </head>
   <body>
