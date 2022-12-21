@@ -18,7 +18,7 @@ as a template engine, for defining custom tags, or as a complete framework.
 <html>
   <head>
     <script type="module">
-      import merlin from '../index.js'
+      import merlin from "https://cdn.jsdelivr.net/gh/marcodpt/merlin/index.js"
 
       merlin(document.getElementById('app'), update => ({
         value: "",
@@ -53,7 +53,7 @@ as a template engine, for defining custom tags, or as a complete framework.
 <html>
   <head>
     <script type="module">
-      import merlin from '../index.js'
+      import merlin from "https://cdn.jsdelivr.net/gh/marcodpt/merlin/index.js"
 
       document.body
         .querySelectorAll('my-counter')
