@@ -108,7 +108,7 @@ And we have the hash of the page at that moment equal to:
 ```
 #/counter/7?x=13&y=bird
 ```
-Temos:
+We have:
 ```js
 {
   url: '#/counter/7?x=13&y=bird',
