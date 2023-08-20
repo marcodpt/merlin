@@ -109,7 +109,7 @@ export default ({
           path,
           query,
           route,
-          Params,
+          Params
         })
     }
   }

@@ -5,9 +5,7 @@
  - Ridiculously small API. After reading this file you will understand `Merlin`
 better than me.
  - Ultrafast [vDom](https://github.com/jorgebucaran/superfine).
- - Modest approach,
-can be used in the spirit of [micro-frontends](https://micro-frontends.org/),
-as a template engine, for defining custom tags, or as a complete framework.
+ - Built-in Single Page Application Router.
 
 [Live Demo](https://marcodpt.github.io/merlin/)
 
@@ -15,101 +13,141 @@ as a template engine, for defining custom tags, or as a complete framework.
 [Live Demo](https://marcodpt.github.io/merlin/samples/todo.html)
 
 ```html
+<!DOCTYPE html>
 <html>
   <head>
-    <script type="module">
-      import merlin from "https://cdn.jsdelivr.net/gh/marcodpt/merlin/index.js"
-
-      merlin(document.getElementById('app'), update => ({
-        value: "",
-        todos: [],
-        AddTodo: () => update(({todos, value}) => ({
-          todos: todos.concat(value),
-          value: ""
-        })),
-        NewValue: ev => update({
-          value: ev.target.value
-        })
-      }))
-    </script>
-  </head>
-  <body>
-    <main id="app">
-      <h1>To do list</h1>
-      <input type="text" :value="value" :oninput="NewValue">
-      <ul>
-        <li :each="todos" :text></li>
-      </ul>
-      <button :onclick="AddTodo">New!</button>
-    </main>
-  </body>
-</html>
-```
-
-## Counter components
-[Live Demo](https://marcodpt.github.io/merlin/samples/components.html)
-
-```html
-<html>
-  <head>
-    <script type="module">
-      import merlin from "https://cdn.jsdelivr.net/gh/marcodpt/merlin/index.js"
-
-      document.body
-        .querySelectorAll('my-counter')
-        .forEach(e => merlin(e, (update, {count}) => ({
-          count: isNaN(count) ? 0 : parseInt(count),
-          inc: () => update(({count}) => ({
-            count: count + 1
-          })),
-          dec: () => update(({count}) => ({
-            count: count - 1
-          }))
-        }), document.getElementById('my-counter')))
-    </script>
+    <title>Todo - The Merlin JS framework</title>
   </head>
   <body>
     <main>
-      <my-counter></my-counter>
-      <my-counter count="3"></my-counter>
-      <my-counter count="7"></my-counter>
+      <h1>To do list</h1>
+      <input type="text" value:="value" oninput:="NewValue">
+      <ul>
+        <li each:="todos" text:></li>
+      </ul>
+      <button onclick:="AddTodo">New!</button>
     </main>
-    <template id="my-counter">
-      <h1 :text="count">Counter</h1>
-      <button :onclick="dec">-</button>
-      <button :onclick="inc">+</button>
-    </template>
+    <script type="module">
+      import merlin from "https://cdn.jsdelivr.net/gh/marcodpt/merlin/index.js"
+
+      merlin({
+        init: [
+          {
+            root: document.body.querySelector('main'),
+            controller: ({render}) => {
+              const state = {
+                value: "",
+                todos: [],
+                AddTodo: () => {
+                  state.todos.push(state.value)
+                  state.value = ""
+                  render(state)
+                },
+                NewValue: ev => {
+                  state.value = ev.target.value
+                }
+              }
+              render(state)
+            }
+          }
+        ]
+      })
+    </script>
   </body>
 </html>
 ```
 
 # API
-## merlin(node, init?, template?) -> stop 
-- `node`: It's the DOM element that `merlin` will be mounted on.
-- `init(update, attrs) -> values`: It is an optional function that returns a
-`values` object that will be merged into the `attrs` object,
-this updated object is defined as the `state`.
-  - `update(target)`: A function that merges the `state` object with a new one.
-    - `target(state) -> values`: `target` can be a function that takes the
-`state` and returns a `values` object that will be merged into `state`.
-    - object `target`: `target` can be an object itself. In this case it will
-be merged directly with `state`.
-  - `attrs`: The object generated with the `node` attributes.
-- object `init`: Alternatively, you can use `init` as an object that will be
-merged directly into the `attrs` object to create the `state`.
-- `template`: Is an optional DOM element with the `template` to be rendered
-inside the `node`. If not present, it will use `node` as a full `template`.
-In general, if you want a server-side rendered app, you'll use `node`
-element alone and not pass a `template`, but if you want to reuse the
-component many times on the same page you will need to pass a `template`.
-- `stop() -> ()`: It is a function that is returned that stops the component,
-the `update` function will no longer work and the `drop` function will be
-called, if it was present in `state`.
+## merlin({init, root, routes, middleware}) -> stop
+
+### init: [{root, template, controller}]
+Array of static components that must be initialized at the start of routing.
+Useful for navigation bars for example.
+If not passed, the default value is an empty array.
+
+### root: DOM Element
+The DOM Element that the component should mount.
+In the case of the `init` property, each entry has its own `root`.
+In the case of the `root` property, it will be used in all routes from the
+`routes` property.
+
+### template: DOM Element
+An optional DOM Element that must be passed with the element's view to be
+mounted on `root`.
+If not passed, `root` itself will be used as view.
+
+### routes: [{route, template, controller}]
+Array of routes for routing following the page `hash`.
+If not passed, the default value is an empty array.
+If `route` is not passed, the route will be called if no match happens.
+If `template` is not passed, `root` will be used.
+If `controller` is not passed a simple rendering will be done.
+
+### route: string
+Hash path of the route in question.
+If you do not pass the `route` property, the route will be called if there is
+no match.
+You can declare parameters in routes, for example:
+```js
+{
+  route: '#/counter/:count'
+}
+```
+
+### middleware: [({url, path, query, route, Params, Query}) -> {...}]
+Array of functions that add parameters associated with the page hash.
+It should always return an object with new parameters.
+If not passed, the default value is an empty array.
+For example, if you declared the route:
+```js
+{
+  route: '#/counter/:count'
+}
+```
+And we have the hash of the page at that moment equal to:
+```
+#/counter/7?x=13&y=bird
+```
+Temos:
+```js
+{
+  url: '#/counter/7?x=13&y=bird',
+  path: '#/counter/7',
+  query: 'x=13&y=bird',
+  route: '#/counter/:count',
+  Params: {
+    count: '7'
+  },
+  Query: {
+    x: '13',
+    y: 'bird'
+  }
+}
+```
+New properties can be added to be passed to all `controllers` using your owns
+`middlewares`.
+
+### controller: ({...middleware, root, render, refresh}) -> stop
+Function that controls the component.
+The properties generated by the `middlewares` are only available on the
+`routes` property.
+The `init` property your `controllers` will only have available:
+`root`, `render`, `refresh`.
+
+### render: (state) -> ()
+Renders the `state` in the `view` associated with the route.
+
+### refresh: () -> ()
+Reinitializes the route by calling `controller` with the same parameters as
+the current call.
+          
+### stop: () -> ()
+Function that when called stops the component.
 
 ## Template engine
 Merlin uses [Tint](https://github.com/marcodpt/tint) as its template engine,
-you should read the [docs](https://marcodpt.github.io/tint/syntax/intro.html) for a complete
-reference.
+you should read the [docs](https://marcodpt.github.io/tint/syntax/intro.html)
+for a complete reference.
 
 ## Contributing
 It's a very simple project.
