@@ -34,9 +34,11 @@ merlin({
     }
   ],
   root: document.body.querySelector('main'),
-  routes: {
-    '#/': {},
-    '#/counter/:count': {
+  routes: [
+    {
+      route: '#/'
+    }, {
+      route: '#/counter/:count',
       template: document.getElementById('view-counter'),
       controller: ({Params, render}) => {
         const state = {
@@ -52,8 +54,8 @@ merlin({
         }
         render(state)
       }
-    },
-    '#/todo': {
+    }, {
+      route: '#/todo',
       template: document.getElementById('view-todo'),
       controller: ({render}) => {
         const state = {
@@ -70,8 +72,8 @@ merlin({
         }
         render(state)
       }
-    },
-    '#/clock': {
+    }, {
+      route: '#/clock',
       template: document.getElementById('view-clock'),
       controller: ({render}) => {
         const format = n => (n < 10 ? '0' : '')+n
@@ -93,8 +95,8 @@ merlin({
           clearInterval(itv)
         }
       }
-    },
-    '#/stopwatch': {
+    }, {
+      route: '#/stopwatch',
       template: document.getElementById('view-stopwatch'),
       controller: ({render}) => {
         const format = n => n.toFixed(3)
@@ -130,8 +132,8 @@ merlin({
 
         return state.stop
       }
-    },
-    '#/table': {
+    }, {
+      route: '#/table',
       template: document.getElementById('view-table'),
       controller: ({render}) => {
         var reverse = 1
@@ -177,8 +179,8 @@ merlin({
         }
         totals()
       }
-    },
-    '#/counters': {
+    }, {
+      route: '#/counters',
       template: document.getElementById('view-counters'),
       controller: ({render}) => {
         const state = {}
@@ -201,6 +203,6 @@ merlin({
         render(state)
       }
     }
-  },
+  ],
   notFound: {}
 })

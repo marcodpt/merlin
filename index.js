@@ -34,7 +34,7 @@ export default ({
   const goHome = root ? superfine(root) : () => {}
   middleware = [queryParser].concat(middleware)
   init = init || []
-  routes = routes || {}
+  routes = routes || []
 
   init.forEach(({root, controller, template}) => {
     const render = superfine(root, template)
@@ -51,9 +51,7 @@ export default ({
 
     const Path = path.split('/').map(decodeURIComponent)
 
-    const {
-      route, Params
-    } = Object.keys(routes).reduce((match, route) => {
+    const X = routes.reduce((match, {route, ...extra}) => {
       const Route = route.split('/')
       if (Route.length == Path.length) {
         var weight = 1
@@ -73,7 +71,8 @@ export default ({
           return {
             route,
             Params,
-            weight
+            weight,
+            ...extra
           }
         }
       }
@@ -82,8 +81,7 @@ export default ({
       route: null,
       Params: {},
       weight: 0
-    })
-    const X = routes[route] || notFound
+    }) || notFound
 
     if (X) {
       const controller = X.controller || (({render}) => {
@@ -109,8 +107,8 @@ export default ({
           url,
           path,
           query,
-          route,
-          Params
+          route: X.route,
+          Params: X.Params || {}
         })
     }
   }
