@@ -27,7 +27,6 @@ export default ({
   init,
   root,
   routes,
-  notFound,
   middleware
 }) => {
   var stop
@@ -52,27 +51,35 @@ export default ({
     const Path = path.split('/').map(decodeURIComponent)
 
     const X = routes.reduce((match, {route, ...extra}) => {
-      const Route = route.split('/')
-      if (Route.length == Path.length) {
-        var weight = 1
-        const Params = Path.reduce((Params, value, i) => {
-          if (Params) {
-            if (Route[i].substr(0, 1) == ':') {
-              Params[Route[i].substr(1)] = value
-            } else if (Route[i] !== value) {
-              Params = null
-            } else {
-              weight++
+      if (route == null && !weight) {
+        return {
+          ...extra,
+          ...match,
+          weight: 1
+        }
+      } else {
+        const Route = route.split('/')
+        if (Route.length == Path.length) {
+          var weight = 2
+          const Params = Path.reduce((Params, value, i) => {
+            if (Params) {
+              if (Route[i].substr(0, 1) == ':') {
+                Params[Route[i].substr(1)] = value
+              } else if (Route[i] !== value) {
+                Params = null
+              } else {
+                weight++
+              }
             }
-          }
-          return Params
-        }, {})
-        if (Params && weight > match.weight) {
-          return {
-            route,
-            Params,
-            weight,
-            ...extra
+            return Params
+          }, {})
+          if (Params && weight > match.weight) {
+            return {
+              ...extra,
+              route,
+              Params,
+              weight,
+            }
           }
         }
       }
@@ -81,7 +88,7 @@ export default ({
       route: null,
       Params: {},
       weight: 0
-    }) || notFound
+    })
 
     if (X) {
       const controller = X.controller || (({render}) => {

@@ -35,9 +35,7 @@ merlin({
   ],
   root: document.body.querySelector('main'),
   routes: [
-    {
-      route: '#/'
-    }, {
+    {}, {
       route: '#/counter/:count',
       template: document.getElementById('view-counter'),
       controller: ({Params, render}) => {
@@ -203,6 +201,5 @@ merlin({
         render(state)
       }
     }
-  ],
-  notFound: {}
+  ]
 })
