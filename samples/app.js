@@ -1,7 +1,7 @@
 import merlin from "../index.js"
 import data from './data.js'
 
-merlin({
+window.stop = merlin({
   init: [
     {
       root: document.body.querySelector('nav'),
@@ -28,6 +28,9 @@ merlin({
           }, {
             href: '#/counters',
             label: 'Components'
+          }, {
+            href: 'javascript:stop()',
+            label: 'Stop router'
           }
         ])
       }

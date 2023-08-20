@@ -35,15 +35,16 @@ export default ({
   init = init || []
   routes = routes || []
 
-  init.forEach(({root, controller, template}) => {
+  const Finish = init.map(({root, controller, template}) => {
     const render = superfine(root, template)
-    controller({
+    return controller({
       render,
       root
     })
   })
 
-  const router = url => {
+  const router = () => {
+    const url = window.location.hash
     const Url = url.split('?')
     const path = Url.shift()
     const query = Url.join('?')
@@ -95,9 +96,7 @@ export default ({
         if (X.template) {
           render()
         } else {
-          console.log(root.vdom)
           delete root.vdom
-          console.log(root.vdom)
           goHome()
         }
       })
@@ -120,8 +119,12 @@ export default ({
     }
   }
 
-  window.addEventListener('hashchange', () => {
-    router(window.location.hash)
-  })
-  router(window.location.hash)
+  window.addEventListener('hashchange', router)
+  router()
+
+  return () => {
+    window.removeEventListener('hashchange', router)
+    Finish.push(stop)
+    Finish.filter(f => typeof f == 'function').forEach(f => f())
+  }
 }
