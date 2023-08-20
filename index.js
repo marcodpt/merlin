@@ -1,45 +1,121 @@
-import tint from 'https://cdn.jsdelivr.net/gh/marcodpt/tint/superfine.js'
+import superfine from "https://cdn.jsdelivr.net/gh/marcodpt/tint@2.4.0/superfine.js"
 
-export default (node, init, template) => {
-  const patch = tint(node, template)
-  var stop = false
-  const state = {}
-  const merge = x => {
-    if (x && typeof x == 'object') {
-      Object.keys(x).forEach(k => {
-        state[k] = x[k]
-      })
-    }
-  }
-  const update = callback => {
-    if (!stop) {
-      if (typeof callback == 'function') {
-        merge(callback(state))
+const queryParser = X => ({
+  ...X,
+  Query: X.query.split('&')
+    .map(pair => pair.split('='))
+    .map(pair => ({
+      key: decodeURIComponent(pair.shift()),
+      value: decodeURIComponent(pair.join('='))
+    }))
+    .filter(({key}) => key != "")
+    .reduce((Q, {key, value}) => {
+      if (key.substr(key.length - 2) == '[]') {
+        key = key.substr(0, key.length - 2)
+        if (!(Q[key] instanceof Array)) {
+          Q[key] = []
+        }
+        Q[key].push(value)
       } else {
-        merge(callback)
+        Q[key] = value
       }
-      patch(state)
+      return Q
+    }, {})
+})
+
+export default ({
+  init,
+  root,
+  routes,
+  notFound,
+  middleware
+}) => {
+  var stop
+  const goHome = superfine(root)
+  middleware = [queryParser].concat(middleware)
+  init = init || []
+
+  init.forEach(({root, controller, template}) => {
+    const render = superfine(root, template)
+    controller({
+      render,
+      root
+    })
+  })
+
+  const router = url => {
+    const Url = url.split('?')
+    const path = Url.shift()
+    const query = Url.join('?')
+
+    const Path = path.split('/').map(decodeURIComponent)
+
+    const {
+      route, Params
+    } = Object.keys(routes || {}).reduce((match, route) => {
+      const Route = route.split('/')
+      if (Route.length == Path.length) {
+        var weight = 1
+        const Params = Path.reduce((Params, value, i) => {
+          if (Params) {
+            if (Route[i].substr(0, 1) == ':') {
+              Params[Route[i].substr(1)] = value
+            } else if (Route[i] !== value) {
+              Params = null
+            } else {
+              weight++
+            }
+          }
+          return Params
+        }, {})
+        if (Params && weight > match.weight) {
+          return {
+            route,
+            Params,
+            weight
+          }
+        }
+      }
+      return match
+    }, {
+      route: null,
+      Params: {},
+      weight: 0
+    })
+    const X = routes[route] || notFound
+
+    if (X) {
+      const controller = X.controller || (({render}) => {
+        if (X.template) {
+          render()
+        } else {
+          console.log(root.vdom)
+          delete root.vdom
+          console.log(root.vdom)
+          goHome()
+        }
+      })
+      const render = superfine(root, X.template)
+      typeof stop == 'function' && stop()
+      stop = middleware.concat(options => controller({
+        ...options,
+        render,
+        root,
+        refresh: () => router(url)
+      }))
+        .filter(fn => typeof fn === 'function')
+        .reduce((X, fn) => fn(X), {
+          url,
+          path,
+          query,
+          route,
+          Params,
+        })
     }
   }
 
-  const attrs = Array.from(node.attributes).reduce((attrs, {
-    nodeName,
-    nodeValue
-  }) => ({
-    ...attrs,
-    [nodeName]: nodeValue
-  }), {})
-
-  if (typeof init == 'function') {
-    update(init(update, attrs))
-  } else {
-    update(init && typeof init == 'object' ? init : attrs)
-  } 
-
-  return () => {
-    if (!stop && typeof state.drop == 'function') {
-      state.drop(state)
-    }
-    stop = true
-  }
+  window.addEventListener('hashchange', () => {
+    router(window.location.hash)
+  })
+  router(window.location.hash)
 }
