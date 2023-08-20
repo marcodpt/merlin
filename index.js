@@ -30,7 +30,7 @@ export default ({
   middleware
 }) => {
   var stop
-  const goHome = root ? superfine(root) : () => {}
+  const home = root ? superfine(root) : () => {}
   middleware = [queryParser].concat(middleware)
   init = init || []
   routes = routes || []
@@ -92,15 +92,8 @@ export default ({
     })
 
     if (X) {
-      const controller = X.controller || (({render}) => {
-        if (X.template) {
-          render()
-        } else {
-          delete root.vdom
-          goHome()
-        }
-      })
-      const render = superfine(root, X.template)
+      const controller = X.controller || (({render}) => render())
+      const render = !X.template ? home : superfine(root, X.template)
       typeof stop == 'function' && stop()
       stop = middleware.concat(options => controller({
         ...options,
