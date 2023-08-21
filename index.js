@@ -29,8 +29,7 @@ export default ({
   routes,
   middleware
 }) => {
-  var stop
-  const home = root ? superfine(root) : () => {}
+  var stop, home
   middleware = [queryParser].concat(middleware)
   init = init || []
   routes = routes || []
@@ -52,11 +51,13 @@ export default ({
     const Path = path.split('/').map(decodeURIComponent)
 
     const X = routes.reduce((match, {route, ...extra}) => {
-      if (route == null && !weight) {
-        return {
-          ...extra,
-          ...match,
-          weight: 1
+      if (route == null) {
+        if (!match.weight) {
+          return {
+            ...extra,
+            ...match,
+            weight: 1
+          }
         }
       } else {
         const Route = route.split('/')
@@ -92,8 +93,14 @@ export default ({
     })
 
     if (X) {
+      if (!home) {
+        home = document.createElement('template')
+        Array.from(root.children).forEach(child => {
+          home.content.appendChild(child.cloneNode(true))
+        })
+      }
       const controller = X.controller || (({render}) => render())
-      const render = !X.template ? home : superfine(root, X.template)
+      const render = superfine(root, X.template || home)
       typeof stop == 'function' && stop()
       stop = middleware.concat(options => controller({
         ...options,
