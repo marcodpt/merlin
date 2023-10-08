@@ -38,7 +38,11 @@ window.stop = merlin({
   ],
   root: document.body.querySelector('main'),
   routes: [
-    {}, {
+    {
+      route: ''
+    }, {
+      route: '#/'
+    }, {
       route: '#/counter/:count',
       template: document.getElementById('view-counter'),
       controller: ({Params, render}) => {
@@ -203,6 +207,8 @@ window.stop = merlin({
         counter('third', 7)
         render(state)
       }
+    }, {
+      template: document.getElementById('view-notfound')
     }
   ]
 })
