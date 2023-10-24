@@ -77,12 +77,17 @@ MUST use `data-on{event}` because there is no global function `NewValue` or
 `AddTodo` and it will result in errors.
 
 # API
-## merlin({components, root, routes, middleware, ...init}) -> stop
+## merlin({components, root, routes, middleware, ...userData}) -> stop
 
-### components: {name: {root, template, init, done, format, ...methods}}
-Array of static components that must be initialized at the start of routing.
-Useful for navigation bars for example.
-If not passed, the default value is an empty array.
+### components: {name: {root, template, init, format, done, ...methods}}
+Object containing all components of your app:
+
+ - `root`: the optional root DOM element where the component should be mounted. Components without root are views in the routing system. Components with root are permanent elements like navbars, footers.
+ - `template`: the optional template DOM element used to mount the component. In general you will use templates associated with views in the routing system, and ingore it in permanent elements. But there are exceptions that will be covered.
+ - fn `init`(`data`, `call`) -> `state`: is an optional function that is always called in the startup of the component and returns the initial `state`. If `init` is not passed wherever been in `data` will be the initial `state`. 
+ - fn `format`(`state`) -> `viewState`: is an optional function that transform the state for view rendering. Is useful when the state should store data that belongs to internal component logic and/or the same data formatting should be aplied before rendering. If `format` is not passed the `state` will be used directly to render the view.
+ - fn `done`(`state`, `data`, `call`) -> (): is an optional function that is always called when the component should be stopped, like when the route has changed. If it is not passed a function that do nothing is used instead.
+ - fn `method`(`state`, `data`, `call`) -> `newState`: All remaining properties of the `component` object are `methods` avaiable to be called by the user using `on{event}` or `data-on{event}` on the associated `template` or DOM element or to be called internally by other `method` or `init` or `done` via the use of `call` function.
 
 ### root: DOM Element
 The DOM Element that the component should mount.
