@@ -1,4 +1,55 @@
-import superfine from "https://cdn.jsdelivr.net/gh/marcodpt/tint@2.4.0/superfine.js"
+import tint from "https://cdn.jsdelivr.net/gh/marcodpt/tint@2.5.0/index.js"
+import {
+  h, text, patch
+} from "https://cdn.jsdelivr.net/gh/jorgebucaran/superfine@8.2.0/index.js"
+
+const component = ({
+  root,
+  template,
+  format,
+  ...events
+}) => {
+  var state
+  var isRunning = false
+  format = typeof format == 'function' ? format : (state => state)
+  events.init = typeof events.init == 'function' ? events.init : (data => data)
+  events.done = typeof events.done == 'function' ? events.done : (() => null)
+
+  const call = (message, data) => {
+    if ((message == 'init' && !isRunning) || (
+      message != 'init' &&
+      isRunning &&
+      typeof events[message] == 'function'
+    )) {
+      isRunning = true
+      const newState = message == 'init' ? events.init(data, call) :
+        events[message](state, data, call)
+      state = newState === undefined ? state : newState
+      if (message == 'done') {
+        isRunning = false
+      } else {
+        patch(root, render(format(state)))
+      }
+    }
+  }
+
+  const render = tint((tag, attrs, children) => {
+    Object.keys(attrs || {}).forEach(k => {
+      if (k.substr(0, 7) == 'data-on') {
+        k = k.substr(5)
+      }
+      if (k.substr(0, 2) == 'on') {
+        const name = attrs[k] || attrs['data-'+k]
+        attrs[k] = ev => {
+          call(name, ev)
+        }
+      }
+    })
+    return h(tag, attrs, children)
+  }, text)(root, template)
+
+  return call
+}
 
 const queryParser = X => ({
   ...X,
@@ -24,23 +75,45 @@ const queryParser = X => ({
 })
 
 export default ({
-  init,
   root,
+  components,
   routes,
-  middleware
+  middleware,
+  ...userData
 }) => {
-  var stop, home
+  root = root || document.body.querySelector('main') || document.body
+  routes = routes instanceof Array ? routes : []
   middleware = [queryParser].concat(middleware)
-  init = init || []
-  routes = routes || []
+    .filter(fn => typeof fn === 'function')
+  components = components && typeof components == 'object' ? components : {}
 
-  const Finish = init.map(({root, controller, template}) => {
-    const render = superfine(root, template)
-    return controller({
-      render,
-      root
+  const home = document.createElement('template') 
+  if (routes.length) {
+    Array.from(root.children).forEach(child => {
+      home.content.appendChild(child.cloneNode(true))
     })
-  })
+    components.home = {template: home}
+  }
+  
+  const Views = {}
+  const Handlers = Object.keys(components).reduce((H, name) => {
+    const C = components[name]
+    if (C.root == null) {
+      C.root = root
+    }
+    if (C.root == root && routes.length && C.template == null) {
+      C.template = home
+    }
+    const B = component(C)
+    H.push(B)
+    if (C.root != root || !routes.length) {
+      B('init', userData[name])
+    } else {
+      Views[name] = B
+    }
+    return H
+  }, [])
+  var handler = Views.home
 
   const router = () => {
     const url = window.location.hash
@@ -93,38 +166,34 @@ export default ({
     })
 
     if (X) {
-      if (!home) {
-        home = document.createElement('template')
-        Array.from(root.children).forEach(child => {
-          home.content.appendChild(child.cloneNode(true))
-        })
-      }
-      const controller = X.controller || (({render}) => render())
-      const render = superfine(root, X.template || home)
-      typeof stop == 'function' && stop()
-      stop = middleware.concat(options => controller({
-        ...options,
-        render,
+      handler('done')
+      handler = Views[X.component] || Views.home
+      const state = middleware.reduce((X, fn) => fn(X), {
+        url,
+        path,
+        query,
+        route: X.route,
+        Params: X.Params || {},
+        data: userData[X.component]
+      })
+      handler('init', {
+        ...state,
         root,
         refresh: () => router(url)
-      }))
-        .filter(fn => typeof fn === 'function')
-        .reduce((X, fn) => fn(X), {
-          url,
-          path,
-          query,
-          route: X.route,
-          Params: X.Params || {}
-        })
+      })
+      Handlers.forEach(handler => handler('router', {...state}))
     }
   }
 
-  window.addEventListener('hashchange', router)
-  router()
+  if (routes.length) {
+    window.addEventListener('hashchange', router)
+    router()
+  }
 
   return () => {
-    window.removeEventListener('hashchange', router)
-    Finish.push(stop)
-    Finish.filter(f => typeof f == 'function').forEach(f => f())
+    if (routes.length) {
+      window.removeEventListener('hashchange', router)
+    }
+    Handlers.forEach(handler => handler('done'))
   }
 }

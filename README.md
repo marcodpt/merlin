@@ -21,36 +21,33 @@ better than me.
   <body>
     <main>
       <h1>To do list</h1>
-      <input type="text" value:="value" oninput:="NewValue">
+      <input type="text" value:="value" data-oninput="NewValue">
       <ul>
         <li each:="todos" text:></li>
       </ul>
-      <button onclick:="AddTodo">New!</button>
+      <button data-onclick="AddTodo">New!</button>
     </main>
     <script type="module">
       import merlin from "https://cdn.jsdelivr.net/gh/marcodpt/merlin/index.js"
 
       merlin({
-        init: [
-          {
+        components: {
+          todo: {
             root: document.body.querySelector('main'),
-            controller: ({render}) => {
-              const state = {
-                value: "",
-                todos: [],
-                AddTodo: () => {
-                  state.todos.push(state.value)
-                  state.value = ""
-                  render(state)
-                },
-                NewValue: ev => {
-                  state.value = ev.target.value
-                }
-              }
-              render(state)
-            }
+            init: () => ({
+              value: "",
+              todos: []
+            }),
+            AddTodo: ({todos, value}) => ({
+              todos: todos.concat(value),
+              value: ''
+            }),
+            NewValue: ({todos, value}, ev) => ({
+              todos,
+              value: ev.target.value
+            })
           }
-        ]
+        }
       })
     </script>
   </body>
@@ -58,9 +55,9 @@ better than me.
 ```
 
 # API
-## merlin({init, root, routes, middleware}) -> stop
+## merlin({components, root, routes, middleware, ...init}) -> stop
 
-### init: [{root, template, controller}]
+### components: {name: {root, template, init, done, format, ...methods}}
 Array of static components that must be initialized at the start of routing.
 Useful for navigation bars for example.
 If not passed, the default value is an empty array.
