@@ -90,7 +90,7 @@ window.stop = merlin({
           state.intervalId = null
         }
       },
-      done: (_state, _data, call) => call('stop')
+      done: (_, call) => call('stop')
     }, 
     table: {
       template: document.getElementById('view-table'),

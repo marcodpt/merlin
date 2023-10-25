@@ -23,7 +23,8 @@ const component = ({
     )) {
       isRunning = true
       const newState = message == 'init' ? events.init(data, call) :
-        events[message](state, data, call)
+        message == 'done' ? events.done(state, call) :
+          events[message](state, data, call)
       state = newState === undefined ? state : newState
       if (message == 'done') {
         isRunning = false

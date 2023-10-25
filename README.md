@@ -97,7 +97,7 @@ the state for rendering the view. It is useful when the state must store data
 that belongs to the component's internal logic and/or data formatting must be
 applied before rendering. If `format` is not passed, `state` will be used
 directly to render the view.
- - fn `done`(`state`, `data`, `call`) -> (): An optional function that is
+ - fn `done`(`state`, `call`) -> (): An optional function that is
 always called when the component must be stopped, such as when the route is
 changed. If not passed, a function that does nothing will be used.
  - fn `method`(`state`, `data`, `call`) -> `newState`: All remaining properties
