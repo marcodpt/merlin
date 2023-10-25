@@ -113,33 +113,29 @@ the `methods` become available and the router stops the component with
 `data` in `init` will be covered next.
 
 ### root: DOM Element
-The DOM Element that the component should mount.
-In the case of the `init` property, each entry has its own `root`.
-In the case of the `root` property, it will be used in all routes from the
-`routes` property.
+Whenever the page's hash changes, the router resolves to a new state. If you
+are not passing `routes` the router will not be mounted (and it is absolutely
+unnecessary to pass `root`), otherwise it will listen for hash changes and
+render the associated component in the `root` or `main` tag if `root` is not
+is passed or `body` if there is no `main` tag in the body.
 
-### template: DOM Element
-An optional DOM Element that must be passed with the element's view to be
-mounted on `root`.
-If not passed, `root` itself will be used as view.
+### routes: [{route, component}]
+Array of `routes` that will be used to render a `component` within the `root`
+element on page hash changes. The first route that matches the hash will be
+used.
+ - `route`: An optional string representing a hash path. It is allowed to use
+`:var` to declare path variables.
 
-### routes: [{route, template, controller}]
-Array of routes for routing following the page `hash`.
-If not passed, the default value is an empty array.
-If `route` is not passed, the route will be called if no match happens.
-If `template` is not passed, `root` will be used.
-If `controller` is not passed a simple rendering will be done.
+Ex: `#/counter/:count` will match `#/counter/3` with `Path` {"count": 3}.
 
-### route: string
-Hash path of the route in question.
-If you do not pass the `route` property, the route will be called if there is
-no match.
-You can declare parameters in routes, for example:
-```js
-{
-  route: '#/counter/:count'
-}
-```
+If you don't pass `route`, the router will match when no other routes match
+(useful for creating 404 views).
+
+ - `component`: An optional string with the `name` of a rootless `component`
+defined in the `components` object. If no components are passed, whatever was
+inside the `root` element before the router started will be re-rendered there,
+this is useful for going back to an initial view that was SSR inside the
+`root` before the router started.
 
 ### middleware: [({url, path, query, route, Params, Query}) -> {...}]
 Array of functions that add parameters associated with the page hash.
