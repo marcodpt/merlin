@@ -168,20 +168,25 @@ export default ({
     if (X) {
       handler('done')
       handler = Views[X.component] || Views.home
-      const state = middleware.reduce((X, fn) => fn(X), {
+      const copy = X => JSON.parse(JSON.stringify(X))
+      const base = {
         url,
         path,
         query,
         route: X.route,
-        Params: X.Params || {},
-        data: userData[X.component]
-      })
+        Params: X.Params || {}
+      }
+      const state = {
+        ...middleware.reduce((X, fn) => fn(X), copy(base)),
+        ...base
+      }
+      Handlers.forEach(handler => handler('hashchange', copy(state)))
       handler('init', {
         ...state,
+        data: userData[X.component],
         root,
-        refresh: () => router(url)
+        refresh: () => router()
       })
-      Handlers.forEach(handler => handler('router', {...state}))
     }
   }
 
