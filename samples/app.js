@@ -95,12 +95,12 @@ window.stop = merlin({
     table: {
       template: document.getElementById('view-table'),
       set: (_, state) => state,
-      init: ({data}, call) => {
+      init: ({api}, call) => {
         call('set', {
-          data: JSON.parse(JSON.stringify(data)),
+          data: JSON.parse(JSON.stringify(api)),
           reverse: 1,
           sorted: 'id',
-          rows: data.map((row, i) => ({
+          rows: api.map((row, i) => ({
             ...row,
             id: i+1
           }))

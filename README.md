@@ -168,24 +168,24 @@ We have:
 }
 ```
 
-New properties can be added to be passed to all rootless `components` using your owns `middlewares`.
+New properties can be added to be passed to all rootless `components` using
+your owns `middlewares`.
 
 ### userData and init
 Any remaining properties present will be treated as `userData`. And they will
-be passed at `component` initialization whenever their names are compatible.
-
- - Rooted components are initialized with their own `userData`, as an example
-you declare a `component` called `navbar`, whatever is in the `navbar` property
-here will be used in the `init` method for that component as `data`.
- - Rootless components are initialized (when the router matches a hash change)
-with an object with properties defined by:
-   - the result of `middleware` (`url`, `path`, `query`, `route`, `Params`,
-`Query`) and any new properties that the user-defined `middleware` brings.
-   - `data`: It is a property that brings the `userData` associated to a
-rootless `component`.
+be passed at `component` `init` function.
+   - `api`: It is a property that brings the `userData` associated to the
+`component`.
+   - `config`: It is a property that contains `userData` that is not associated
+with any `component`.
    - `root`: DOM element that the router is mounted on.
    - `refresh`() -> (): A function that tells the router to restart the
 component.
+
+Rootless components are initialized (when the router matches a hash change)
+with an object with properties defined by the result of `middleware`
+(`url`, `path`, `query`, `route`, `Params`, `Query`) and any new properties
+that the user-defined `middleware` brings.
 
 ### hashchange
 A function that is called on all rooted components whenever the router matches

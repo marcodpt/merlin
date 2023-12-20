@@ -39,11 +39,11 @@ const component = ({
       if (k.substr(0, 7) == 'data-on') {
         k = k.substr(5)
       }
+      const name = attrs[k] || attrs['data-'+k]
       if (k.substr(0, 2) == 'on') {
-        const name = attrs[k] || attrs['data-'+k]
-        attrs[k] = ev => {
+        attrs[k] = typeof events[name] == 'function' ? ev => {
           call(name, ev)
-        }
+        } : (window[name] || (() => {}))
       }
     })
     return h(tag, attrs, children)
@@ -96,8 +96,19 @@ export default ({
     components.home = {template: home}
   }
   
+  const names = Object.keys(components)
   const Views = {}
-  const Handlers = Object.keys(components).reduce((H, name) => {
+  const extra = {
+    config: Object.keys(userData).reduce((config, name) => {
+      if (names.indexOf(name) < 0) {
+        config[name] = userData[name]
+      }
+      return config
+    }, {}),
+    root,
+    refresh: () => router()
+  }
+  const Handlers = names.reduce((H, name) => {
     const C = components[name]
     if (C.root == null) {
       C.root = root
@@ -108,7 +119,10 @@ export default ({
     const B = component(C)
     H.push(B)
     if (C.root != root || !routes.length) {
-      B('init', userData[name])
+      B('init', {
+        api: userData[name],
+        ...extra
+      })
     } else {
       Views[name] = B
     }
@@ -184,9 +198,8 @@ export default ({
       Handlers.forEach(handler => handler('hashchange', copy(state)))
       handler('init', {
         ...state,
-        data: userData[X.component],
-        root,
-        refresh: () => router()
+        api: userData[X.component],
+        ...extra
       })
     }
   }
