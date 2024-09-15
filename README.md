@@ -1,4 +1,4 @@
-# ![](docs/favicon.ico) The Merlin JS framework
+# ![](favicon.ico) The Merlin JS framework
   [Raj](https://github.com/andrejewski/raj) +
   [Superfine](https://github.com/jorgebucaran/superfine) +
   [Tint](https://github.com/marcodpt/tint) +
@@ -71,27 +71,27 @@ better than me.
 
 ## 💻 Examples
  - Counter:
-[Demo](https://marcodpt.github.io/merlin/counter.html)
-[Source](https://github.com/marcodpt/merlin/blob/main/docs/counter.html)
+[Demo](https://marcodpt.github.io/merlin/examples/counter.html)
+[Source](https://github.com/marcodpt/merlin/blob/main/examples/counter.html)
  - Todo SSR:
-[Demo](https://marcodpt.github.io/merlin/todo_ssr.html)
-[Source](https://github.com/marcodpt/merlin/blob/main/docs/todo_ssr.html)
+[Demo](https://marcodpt.github.io/merlin/examples/todo_ssr.html)
+[Source](https://github.com/marcodpt/merlin/blob/main/examples/todo_ssr.html)
  - Clock:
-[Demo](https://marcodpt.github.io/merlin/clock.html)
-[Source](https://github.com/marcodpt/merlin/blob/main/docs/clock.html)
+[Demo](https://marcodpt.github.io/merlin/examples/clock.html)
+[Source](https://github.com/marcodpt/merlin/blob/main/examples/clock.html)
  - Stopwatch:
-[Demo](https://marcodpt.github.io/merlin/stopwatch.html)
-[Source](https://github.com/marcodpt/merlin/blob/main/docs/stopwatch.html)
+[Demo](https://marcodpt.github.io/merlin/examples/stopwatch.html)
+[Source](https://github.com/marcodpt/merlin/blob/main/examples/stopwatch.html)
  - Table:
-[Demo](https://marcodpt.github.io/merlin/table.html)
-[Source](https://github.com/marcodpt/merlin/blob/main/docs/table.html)
+[Demo](https://marcodpt.github.io/merlin/examples/table.html)
+[Source](https://github.com/marcodpt/merlin/blob/main/examples/table.html)
  - Components:
-[Demo](https://marcodpt.github.io/merlin/components.html)
-[Source](https://github.com/marcodpt/merlin/blob/main/docs/components.html)
+[Demo](https://marcodpt.github.io/merlin/examples/components.html)
+[Source](https://github.com/marcodpt/merlin/blob/main/examples/components.html)
  - SPA Router:
-[Demo](https://marcodpt.github.io/merlin/spa.html)
-[HTML](https://github.com/marcodpt/merlin/blob/main/docs/spa.html)
-[JS](https://github.com/marcodpt/merlin/blob/main/docs/spa.js)
+[Demo](https://marcodpt.github.io/merlin/examples/spa.html)
+[HTML](https://github.com/marcodpt/merlin/blob/main/examples/spa.html)
+[JS](https://github.com/marcodpt/merlin/blob/main/examples/spa.js)
 
 ## 📖 API
 

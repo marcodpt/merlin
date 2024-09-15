@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
+    <link rel="shortcut icon" type="image/x-icon" href="../favicon.ico">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/water.css">
     <title>SPA Router - The Merlin JS framework</title>
   </head>
@@ -31,34 +31,6 @@
       <button onclick:="dec">-</button>
       <button onclick:="inc">+</button>
     </template>
-    <script type="module">
-      import {spa} from "https://cdn.jsdelivr.net/gh/marcodpt/merlin/index.min.js"
-
-      spa({
-        node: document.body.querySelector('main'),
-        routes: {
-          '/': {},
-          '/hello/:name': {
-            template: document.getElementById('view-hello')
-          },
-          '/counter/:start': {
-            template: document.getElementById('view-counter'),
-            init: ({start}) => [parseInt(start)],
-            update: (message, count) => [count + (
-              message == 'inc' ? 1 :
-              message == 'dec' ? -1 : 0
-            )],
-            view: (count, dispatch) => ({
-              count,
-              inc: () => dispatch('inc'),
-              dec: () => dispatch('dec')
-            })
-          },
-          '*': {
-            template: document.getElementById('view-404')
-          }
-        }
-      })
-    </script>
+    <script type="module" src="spa.js"></script>
   </body>
 </html>
