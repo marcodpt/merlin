@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/water.css">
+    <title>Counter - The Merlin JS framework</title>
+  </head>
+  <body>
+    <main>
+      <h1>Counter: <span text:="count"></span></h1>
+      <button onclick:="dec">-</button>
+      <button onclick:="inc">+</button>
+    </main>
+    <script type="module">
+      import merlin from "../src/index.js"
+
+      merlin({
+        node: document.body.querySelector('main'),
+        init: [0],
+        update: (message, count) => [count + (
+          message == 'inc' ? 1 :
+          message == 'dec' ? -1 : 0
+        )],
+        view: (count, dispatch) => ({
+          count,
+          inc: () => dispatch('inc'),
+          dec: () => dispatch('dec')
+        })
+      })
+    </script>
+  </body>
+</html>

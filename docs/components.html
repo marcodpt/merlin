@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/water.css">
+    <title>Components - The Merlin JS framework</title>
+  </head>
+  <body>
+    <main>
+      <h1>Components sample</h1>
+      <comp-counter each:="" bind:=""></comp-counter>
+    </main>
+    <template id="comp-counter">
+      <h1>Counter: <span text:="count"></span></h1>
+      <button onclick:="dec">-</button>
+      <button onclick:="inc">+</button>
+    </template>
+    <script type="module">
+      import merlin from "../src/index.js"
+
+      merlin({
+        node: document.body.querySelector('main'),
+        init: [[0, 3, 7]],
+        update: (i, counters) => {
+          const delta = i > 0 ? 1 : -1
+          i = delta > 0 ? i - 1 : delta * i
+          counters[i] += delta
+
+          return [counters]
+        },
+        view: (counters, dispatch) => counters.map((count, i) => ({
+          count,
+          inc: () => {dispatch(i+1)},
+          dec: () => {dispatch(-i)},
+        }))
+      })
+    </script>
+  </body>
+</html>

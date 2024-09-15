@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/water.css">
+    <title>Stopwatch - The Merlin JS framework</title>
+  </head>
+  <body>
+    <main>
+      <h1>Stopwatch</h1>
+      <h2 text:="clock">0.000</h2>
+      <button onclick:="start">Start</button>
+      <button onclick:="stop">Stop</button>
+      <button onclick:="reset">Reset</button>
+    </main>
+    <script type="module">
+      import merlin from "../src/index.js"
+
+      merlin({
+        node: document.body.querySelector('main'),
+        init: [{
+          clock: 0,
+          offset: 0
+        }],
+        update: (message, state) => {
+          console.log('tick')
+          if (message == 'reset') {
+            state.clock = 0
+          } else if (message == 'start') {
+            state.offset = Date.now()
+          } else if (message == 'stop') {
+            state.offset = 0
+          }
+
+          if (state.offset) {
+            const now = Date.now()
+            state.clock += (now - state.offset) / 1000
+            state.offset = now
+          }
+          return [state, !state.offset ? null : dispatch => {
+            setTimeout(dispatch, 100)
+          }]
+        },
+        view: ({clock}, dispatch) => ({
+          clock: clock.toFixed(3),
+          start: () => {dispatch('start')},
+          stop: () => {dispatch('stop')},
+          reset: () => {dispatch('reset')}
+        })
+      })
+    </script>
+  </body>
+</html>

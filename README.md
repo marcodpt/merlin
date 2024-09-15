@@ -1,4 +1,4 @@
-# ![](favicon.ico) The Merlin JS framework
+# ![](docs/favicon.ico) The Merlin JS framework
  - No building tools. Use a regular html file as a Single File Component.
  - Server side rendered by default
 ([templates](https://marcodpt.github.io/tint/syntax/intro.html) are valid html).

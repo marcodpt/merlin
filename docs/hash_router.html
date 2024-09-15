@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/water.css">
+    <title>Hash Router - The Merlin JS framework</title>
+  </head>
+  <body>
+    <nav>
+      <a href="#/">Home</a> |
+      <a href="#/hello/John">John</a> |
+      <a href="#/hello/Mary">Mary</a> |
+      <a href="#/counter/3">Counter: 3</a> |
+      <a href="#/wrong">Not Found</a>
+    </nav>
+    <main>
+      <h1>Hash Router</h1>
+      <p>This is the home page!</p>
+    </main>
+    <template id="view-hello">
+      <h1>Hello <template text:="name"></template>!</h1>
+    </template>
+    <template id="view-404">
+      <h1>Page not found</h1>
+    </template>
+    <template id="view-counter">
+      <h1>Counter: <span text:="count"></span></h1>
+      <button onclick:="dec">-</button>
+      <button onclick:="inc">+</button>
+    </template>
+    <script type="module">
+      import merlin from "../src/index.js"
+
+      const main = document.body.querySelector('main')
+
+      const router = routes => path => {
+        const Path = path.split('/').map(decodeURIComponent)
+
+        const {route, Params} = Object.keys(routes).reduce((match, route) => {
+          const Route = route.split('/')
+          if (Route.length == Path.length) {
+            var weight = 1
+            const Params = Path.reduce((Params, value, i) => {
+              if (Params) {
+                if (Route[i].substr(0, 1) == ':') {
+                  Params[Route[i].substr(1)] = value
+                } else if (Route[i] !== value) {
+                  Params = null
+                } else {
+                  weight++
+                }
+              }
+              return Params
+            }, {})
+            if (Params && weight > match.weight) {
+              return {
+                route,
+                Params,
+                weight,
+              }
+            }
+          }
+          return match
+        }, {
+          route: '*',
+          Params: {},
+          weight: 0
+        })
+
+        if (typeof routes[route] == 'function') {
+          routes[route](Params)
+        }
+      }
+
+      const app = (node, routes) => {
+        const R = {}
+        const home = node.cloneNode(true)
+        Object.keys(routes).forEach(k => {
+          R[k] = Params => {
+            const init = (routes[k].init || (Params => [Params]))(Params)
+            return merlin({
+              node,
+              template: home,
+              view: state => state,
+              ...routes[k],
+              init
+            })
+          }
+        })
+        const run = router(R)
+        const change = () => {
+          run((window.location.hash || '#/').substr(1))
+        }
+
+        window.addEventListener('hashchange', change)
+        change()
+      }
+
+      app(main, {
+        '/': {},
+        '/hello/:name': {
+          template: document.getElementById('view-hello')
+        },
+        '/counter/:start': {
+          template: document.getElementById('view-counter'),
+          init: ({start}) => [parseInt(start)],
+          update: (message, count) => [count + (
+            message == 'inc' ? 1 :
+            message == 'dec' ? -1 : 0
+          )],
+          view: (count, dispatch) => ({
+            count,
+            inc: () => dispatch('inc'),
+            dec: () => dispatch('dec')
+          })
+        },
+        '*': {
+          template: document.getElementById('view-404')
+        }
+      })
+    </script>
+  </body>
+</html>

@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/water.css">
+    <title>Table - The Merlin JS framework</title>
+  </head>
+  <body>
+    <main>
+      <table>
+        <thead>
+          <tr>
+            <td></td>
+            <td text:="count"></td>
+            <td></td>
+            <td text:="avg_age"></td>
+            <td text:="sum_balance"></td>
+          </tr>
+          <tr>
+            <th>Delete</th>
+            <th>
+              <a href="javascript:;" onclick:="sort_id">Id</a>
+            </th>
+            <th>
+              <a href="javascript:;" onclick:="sort_name">Name</a>
+            </th>
+            <th>
+              <a href="javascript:;" onclick:="sort_age">Age</a>
+            </th>
+            <th>
+              <a href="javascript:;" onclick:="sort_balance">Balance ($)</a>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr each:="rows">
+            <td>
+              <a href="javascript:;"  onclick:="delete">Delete</a>
+            </td>
+            <td text:="id"></td>
+            <td text:="name"></td>
+            <td text:="age"></td>
+            <td text:="balance"></td>
+          </tr>
+        </tbody>
+      </table>
+    </main>
+    <script type="module">
+      import merlin from "../src/index.js"
+
+      merlin({
+        node: document.body.querySelector('main'),
+        init: [{
+          data: [
+            {
+              'id': 1,
+              'name': 'Roman Patrick',
+              'age': 33,
+              'balance': 2923.74
+            }, {
+              'id': 2,
+              'name': 'Moon Fischer',
+              'age': 35,
+              'balance': 3605.23
+            }, {
+              'id': 3,
+              'name': 'Kayla Odom',
+              'age': 37,
+              'balance': 3467.08
+            }, {
+              'id': 4,
+              'name': 'Susie Hawkins',
+              'age': 31,
+              'balance': 2941.08
+            }, {
+              'id': 5,
+              'name': 'Fern Donovan',
+              'age': 23,
+              'balance': 1784.53
+            }, {
+              'id': 6,
+              'name': 'Spence Nelson',
+              'age': 34,
+              'balance': 1756.61
+            }, {
+              'id': 7,
+              'name': 'Everett Owens',
+              'age': 30,
+              'balance': 1903.71
+            }, {
+              'id': 8,
+              'name': 'Guerra Mcdaniel',
+              'age': 21,
+              'balance': 1769.37
+            }, {
+              'id': 9,
+              'name': 'Lorene Allen',
+              'age': 39,
+              'balance': 2593.91
+            }, {
+              'id': 10,
+              'name': 'Wolfe Bradshaw',
+              'age': 27,
+              'balance': 2306.55
+            }
+          ],
+          asc: 1,
+          sorted: 'id'
+        }],
+        update: (k, state) => {
+          if (typeof k == 'string') {
+            if (state.sorted == k) {
+              state.asc = -1 * state.asc
+            } else {
+              state.asc = 1
+              state.sorted = k 
+            }
+            state.data.sort(
+              (a, b) => state.asc * (a[k] < b[k] ? -1 : a[k] > b[k] ? 1 : 0)
+            )
+          } else if (typeof k == 'number' && state.data[k]) {
+            state.data.splice(k, 1)
+          }
+          return [state]
+        },
+        view: ({data}, dispatch) => ({
+          rows: data.map((row, i) => ({
+            ...row,
+            delete: () => {dispatch(i)}
+          })),
+          count: data.length,
+          avg_age: (
+            data.reduce((total, {age}) => total + age, 0) / (data.length || 1)
+          ).toFixed(0),
+          sum_balance: data.reduce((total, {
+            balance
+          }) => total + balance, 0).toFixed(2),
+          sort_id: () => {dispatch('id')},
+          sort_age: () => {dispatch('age')},
+          sort_name: () => {dispatch('name')},
+          sort_balance: () => {dispatch('balance')}
+        })
+      })
+    </script>
+  </body>
+</html>

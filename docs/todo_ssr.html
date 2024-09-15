@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/water.css">
+    <title>Todo SSR - The Merlin JS framework</title>
+  </head>
+  <body>
+    <h1>To do list (Server-Side Rendered)</h1>
+    <main>
+      <input type="text">
+      <ul>
+        <li>read a book</li>
+        <li>plant a tree</li>
+      </ul>
+      <button>New!</button>
+    </main>
+    <template>
+      <input type="text" value:="value" oninput:="NewValue">
+      <ul>
+        <li each:="todos" text:></li>
+      </ul>
+      <button onclick:="AddTodo">New!</button>
+    </template>
+    <script type="module">
+      import merlin from "../src/index.js"
+
+      const main = document.body.querySelector('main')
+      merlin({
+        node: main,
+        template: document.body.querySelector('template'),
+        init: [{
+          value: "",
+          todos: Array.from(main.querySelectorAll('li'))
+            .map(e => e.textContent)
+        }],
+        update: (todo, state) => {
+          if (todo != null) {
+            state.value = todo
+          } else if (state.value) {
+            state.todos.push(state.value)
+            state.value = ""
+          }
+        
+          return [state]
+        },
+        view: (state, dispatch) => ({
+          ...state,
+          AddTodo: () => dispatch(),
+          NewValue: ev => dispatch(ev.target.value)
+        })
+      })
+    </script>
+  </body>
+</html>
