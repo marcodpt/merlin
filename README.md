@@ -4,7 +4,8 @@
   [Tint](https://github.com/marcodpt/tint) +
   SPA Router =  ❤️
 
-  [![bundlejs](https://deno.bundlejs.com/badge?q=https://raw.githubusercontent.com/marcodpt/merlin/main/index.js&treeshake=[*]&text=%22export+merlin%22)](https://bundlejs.com/?q=https://raw.githubusercontent.com/marcodpt/merlin/main/index.js&treeshake=[*]&text=%22export+merlin%22)
+
+  [![bundlejs](https://deno.bundlejs.com/badge?q=https%3A%2F%2Fraw.githubusercontent.com%2Fmarcodpt%2Fmerlin%2Fmain%2Findex.js&treeshake=%5B*%5D)](https://bundlejs.com/?q=https%3A%2F%2Fraw.githubusercontent.com%2Fmarcodpt%2Fmerlin%2Fmain%2Findex.js&treeshake=%5B*%5D)
   [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 [Demo](https://marcodpt.github.io/merlin/)
