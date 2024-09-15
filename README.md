@@ -105,17 +105,17 @@ for a complete reference.
 
 ### app({node, template?, view?, init, update, done?})
  - `node` **DOM Node**:
-Where to mount the component.
+Where to mount the `app`.
  - `template` **Dom Node**:
 An optional `template` to render, if nothing is passed the `node` itself will
 be used.
  - `init` **[state, effect?]**:
 Exactly as defined in [Raj](https://github.com/andrejewski/raj).
    - `state`:
-The initial state of the app. It can be any type of data.
+The initial state of the `app`. It can be any type of data.
    - `effect` **(dispatch) => ()**:
 Optional function that introduces side effects.
-     - dispatch **(message) => ()**:
+     - `dispatch` **(message) => ()**:
 Function that triggers an update on the state. 
  - `update` **(message, state) => [newState, effect?]**:
 Exactly as defined in [Raj](https://github.com/andrejewski/raj).
@@ -124,28 +124,49 @@ The context of the update. It can be any type of data.
    - `state`:
 The current state when update was called. It can be any type of data.
    - `newState`:
-The new state of the app. It can be any type of data.
+The new state of the `app`. It can be any type of data.
  - `view` **(state, dispatch) => data**:
 It will always use [Tint](https://github.com/marcodpt/tint) as the template
 engine, and whatever is returned in `data` will be rendered in `node`.
  - `done` **(state) => ()**:
 Exactly as defined in [Raj](https://github.com/andrejewski/raj).
-Optional function that will be called to end the app.
+Optional function that will be called to end the `app`.
 
 ### spa({node, routes, plugins})
- - `node` DOM Node:
- - `routes` {path: {template?, init, view, update, done}}:
-   - `template` Dom Node: 
-   - `init` ({url, route, path, Params, query, Query, old}) => [state, effect?]: 
-     - `url` string: 
-     - `route` string:
-     - `path` string:
-     - `Params` Object: 
-     - `query` string:
-     - `Query` Object:
-     - `old` {url, route, path, Params, query}:
-   - `view`, `update`, `done`: 
- - `plugins` [{routerData} => {...newData}]:
+ - `node` **DOM Node**:
+Where to mount the `spa`.
+ - `routes` **{route: {template?, init, view, update, done}}**:
+   - `route` **string**:  
+Accept `*` to match any path and `:param` to declare variable.
+   - `template` **Dom Node**: 
+A template to be rendered on the route, if nothing is passed it will use the
+original content of the `node`.
+   - `init` **(routeData) => [state, effect?]**: 
+It needs to be a function that will be called every time the route is started,
+returning the initial state.
+   - `view`, `update`, `done`: Exactly as defined in `app`
+ - `plugins` **[{routeData} => {...newData}]**:
+Plugins are executed sequentially, and must return objects that properties will
+be attached to `routeData`.
+
+#### routeData {url, route, path, Params, query, Query, old, ...newData}
+ - `url` **string**: 
+The `url` as it was passed.
+ - `route` **string**:
+The `route` that matched as declared.
+ - `path` **string**:
+The part of the `url` before the `?`.
+ - `Params` **Object**: 
+Object containing the variables declared in the `route` with the associated
+values in the current `path`.
+ - `query` **string**:
+The part of `url` after the `?`.
+ - `Query` **Object**:
+Parsed query string.
+ - `old` **{url, route, path, Params, query}**:
+Previous `routeData` or `null`.
+ - `newData`
+New properties introduced by plugins.
 
 ## 🤝 Contributing
 It's a very simple project.
