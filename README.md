@@ -22,7 +22,7 @@
 better than me.
 
 ## 🎮 Showcase
-[Demo](https://marcodpt.github.io/merlin/todo.html)
+[Demo](https://marcodpt.github.io/merlin/examples/todo.html)
 
 ```html
 <!DOCTYPE html>
@@ -102,6 +102,29 @@ library, you should read the
 `Merlin` uses [Tint](https://github.com/marcodpt/tint) as its template engine,
 you should read the [docs](https://marcodpt.github.io/tint/syntax/intro.html)
 for a complete reference.
+
+### app({node, template?, view?, init, update, done})
+ - `node` DOM Node:
+ - `template` Dom Node:
+ - `view` (state, dispatch) => data:
+ - `init` [state, effect?]:
+ - `update` (message, state) => [newState, effect?]:
+ - `done` (state) => ():
+
+### spa({node, routes, plugins})
+ - `node` DOM Node:
+ - `routes` {path: {template?, init, view, update, done}}:
+   - `template` Dom Node: 
+   - `init` ({url, route, path, Params, query, Query, old}) => [state, effect?]: 
+     - `url` string: 
+     - `route` string:
+     - `path` string:
+     - `Params` Object: 
+     - `query` string:
+     - `Query` Object:
+     - `old` {url, route, path, Params, query}:
+   - `view`, `update`, `done`: 
+ - `plugins` [{routerData} => {...newData}]:
 
 ## 🤝 Contributing
 It's a very simple project.

@@ -13,8 +13,13 @@
       <a href="#/">Home</a> |
       <a href="#/hello/John">John</a> |
       <a href="#/hello/Mary">Mary</a> |
-      <a href="#/counter/3">Counter: 3</a> |
-      <a href="#/wrong">Not Found</a>
+      <a href="#/counter/3">Counter 3</a> |
+      <a
+        href="#/todo?todos[]=read%20a%20book&todos[]=plant%20a%20tree"
+      >Todo</a> |
+      <a href="#/clock">Clock</a> |
+      <a href="#/wrong">Not Found</a> |
+      <a href="javascript:stop()">Stop router</a>
     </nav>
     <main>
       <h1>Hash Router</h1>
@@ -30,6 +35,16 @@
       <h1>Counter: <span text:="count"></span></h1>
       <button onclick:="dec">-</button>
       <button onclick:="inc">+</button>
+    </template>
+    <template id="view-todo">
+      <h1>To do list</h1>
+      <input type="text" value:="value" oninput:="NewValue">
+      <ul>
+        <li each:="todos" text:></li>
+      </ul>
+      <button onclick:="AddTodo">New!</button>
+    </template>
+    <template id="view-clock">
     </template>
     <script type="module" src="spa.js"></script>
   </body>

@@ -18,11 +18,12 @@
 
       app({
         node: document.body.querySelector('main'),
-        init: [new Date(), dispatch => {
-          setInterval(dispatch, 100)
+        init: [null, dispatch => {dispatch()}],
+        update: () => [new Date(), dispatch => {
+          setTimeout(dispatch, 100)
         }],
-        update: () => [new Date()],
         view: time => {
+          console.log('tick')
           const format = n => (n < 10 ? '0' : '')+n
           return !time ? '00:00:00' : format(time.getHours())+":"+
             format(time.getMinutes())+":"+

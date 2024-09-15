@@ -6,6 +6,6 @@ export default ({node, template, view, ...runtime}) => {
 
   return raj({
     ...runtime,
-    view: (state, dispatch) => {render(view(state, dispatch))}
+    view: (state, dispatch) => {render(view ? view(state, dispatch) : state)}
   })
 }

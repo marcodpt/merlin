@@ -5,23 +5,28 @@ import queryParser from './queryParser.js'
 export default ({node, routes, plugins}) => {
   const home = node.cloneNode(true)
   
-  const run = router(Object.keys(routes).reduce((R, k) => ({
+  var run = router(Object.keys(routes).reduce((R, k) => ({
     ...R,
-    [k]: state => {
-      return app({
-        node,
-        template: home,
-        view: state => state,
-        ...routes[k],
-        init: (routes[k].init || (({Params}) => [Params]))(state)
-      })
-    }
+    [k]: state => app({
+      template: home,
+      ...routes[k],
+      node,
+      init: (routes[k].init || (({Params}) => [Params]))(state)
+    })
   }), routes || {}), [queryParser].concat(plugins || []))
+  var stop = () => {}
 
   const change = () => {
-    run((window.location.hash || '#/').substr(1))
+    if (typeof run == 'function') {
+      stop = run((window.location.hash || '#/').substr(1))
+    }
   }
 
   window.addEventListener('hashchange', change)
   change()
+  return () => {
+    run = false
+    window.removeEventListener('hashchange', change)
+    stop()
+  }
 }
