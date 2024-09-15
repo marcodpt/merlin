@@ -60,5 +60,7 @@ export default (routes, plugins) => {
       )
       old = base
     }
+
+    return stop || (() => {})
   }
 }
