@@ -103,13 +103,22 @@ library, you should read the
 you should read the [docs](https://marcodpt.github.io/tint/syntax/intro.html)
 for a complete reference.
 
-### app({node, template?, view?, init, update, done})
- - `node` DOM Node:
- - `template` Dom Node:
- - `view` (state, dispatch) => data:
- - `init` [state, effect?]:
- - `update` (message, state) => [newState, effect?]:
- - `done` (state) => ():
+### app({node, template?, view?, init, update, done?})
+ - `node` DOM Node: Where to mount the component.
+ - `template` Dom Node: An optional `template` to render, if nothing is passed
+the `node` itself will be used.
+ - `init` [state, effect?]: Exactly as defined in Raj.
+   - `state`: The initial state of the app.
+   - `effect` (dispatch) => (): Optional function that introduces side effects.
+     - dispatch (message) => (): Function that triggers an update on the state. 
+ - `update` (message, state) => [newState, effect?]: Exactly as defined in Raj.
+   - `message`: The context of the update.
+   - `state`: The current state when update was called.
+   - `newState`: The new state of the app.
+ - `view` (state, dispatch) => data: It will always use Tint as the template
+engine, and whatever is returned in `data` will be rendered in `node`.
+ - `done` (state) => (): Exactly as defined in Raj. Optional function that will
+be called to end the app.
 
 ### spa({node, routes, plugins})
  - `node` DOM Node:
