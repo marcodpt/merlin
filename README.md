@@ -128,7 +128,7 @@ The new state of the `app`. It can be any type of data.
  - `view` **(state, dispatch) => data**:
 It will always use [Tint](https://github.com/marcodpt/tint) as the template
 engine, and whatever is returned in `data` will be rendered in `node`.
- - `done` **(state) => ()**:
+ - `done` **state => ()**:
 Exactly as defined in [Raj](https://github.com/andrejewski/raj).
 Optional function that will be called to end the `app`.
 
@@ -141,11 +141,11 @@ variable.
    - `template` **Dom Node**: 
 A template to be rendered on the route, if nothing is passed it will use the
 original content of the `node`.
-   - `init` **(routeData) => [state, effect?]**: 
+   - `init` **routeData => [state, effect?]**: 
 It needs to be a function that will be called every time the route is started,
 returning the initial state.
    - `view`, `update`, `done`: Exactly as defined in `app`
- - `plugins` **[{routeData} => {...newData}]**:
+ - `plugins` **[routeData => {...newData, ...routeData}]**:
 Plugins are executed sequentially, and must return objects that properties will
 be attached to `routeData`.
 
