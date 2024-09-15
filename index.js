@@ -1,3 +1,4 @@
-import app from './app.js'
+import app from './src/app.js'
+import spa from './src/spa.js'
 
-export {app}
+export {app, spa}

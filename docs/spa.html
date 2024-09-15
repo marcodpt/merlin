@@ -32,93 +32,31 @@
       <button onclick:="inc">+</button>
     </template>
     <script type="module">
-      import merlin from "../src/index.js"
+      import {spa} from "https://cdn.jsdelivr.net/gh/marcodpt/merlin/index.min.js"
 
-      const main = document.body.querySelector('main')
-
-      const router = routes => path => {
-        const Path = path.split('/').map(decodeURIComponent)
-
-        const {route, Params} = Object.keys(routes).reduce((match, route) => {
-          const Route = route.split('/')
-          if (Route.length == Path.length) {
-            var weight = 1
-            const Params = Path.reduce((Params, value, i) => {
-              if (Params) {
-                if (Route[i].substr(0, 1) == ':') {
-                  Params[Route[i].substr(1)] = value
-                } else if (Route[i] !== value) {
-                  Params = null
-                } else {
-                  weight++
-                }
-              }
-              return Params
-            }, {})
-            if (Params && weight > match.weight) {
-              return {
-                route,
-                Params,
-                weight,
-              }
-            }
-          }
-          return match
-        }, {
-          route: '*',
-          Params: {},
-          weight: 0
-        })
-
-        if (typeof routes[route] == 'function') {
-          routes[route](Params)
-        }
-      }
-
-      const app = (node, routes) => {
-        const R = {}
-        const home = node.cloneNode(true)
-        Object.keys(routes).forEach(k => {
-          R[k] = Params => {
-            const init = (routes[k].init || (Params => [Params]))(Params)
-            return merlin({
-              node,
-              template: home,
-              view: state => state,
-              ...routes[k],
-              init
+      spa({
+        node: document.body.querySelector('main'),
+        routes: {
+          '/': {},
+          '/hello/:name': {
+            template: document.getElementById('view-hello')
+          },
+          '/counter/:start': {
+            template: document.getElementById('view-counter'),
+            init: ({start}) => [parseInt(start)],
+            update: (message, count) => [count + (
+              message == 'inc' ? 1 :
+              message == 'dec' ? -1 : 0
+            )],
+            view: (count, dispatch) => ({
+              count,
+              inc: () => dispatch('inc'),
+              dec: () => dispatch('dec')
             })
+          },
+          '*': {
+            template: document.getElementById('view-404')
           }
-        })
-        const run = router(R)
-        const change = () => {
-          run((window.location.hash || '#/').substr(1))
-        }
-
-        window.addEventListener('hashchange', change)
-        change()
-      }
-
-      app(main, {
-        '/': {},
-        '/hello/:name': {
-          template: document.getElementById('view-hello')
-        },
-        '/counter/:start': {
-          template: document.getElementById('view-counter'),
-          init: ({start}) => [parseInt(start)],
-          update: (message, count) => [count + (
-            message == 'inc' ? 1 :
-            message == 'dec' ? -1 : 0
-          )],
-          view: (count, dispatch) => ({
-            count,
-            inc: () => dispatch('inc'),
-            dec: () => dispatch('dec')
-          })
-        },
-        '*': {
-          template: document.getElementById('view-404')
         }
       })
     </script>
