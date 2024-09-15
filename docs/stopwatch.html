@@ -17,9 +17,9 @@
       <button onclick:="reset">Reset</button>
     </main>
     <script type="module">
-      import merlin from "../src/index.js"
+      import {app} from "https://cdn.jsdelivr.net/gh/marcodpt/merlin/index.min.js"
 
-      merlin({
+      app({
         node: document.body.querySelector('main'),
         init: [{
           clock: 0,

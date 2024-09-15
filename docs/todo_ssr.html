@@ -26,10 +26,10 @@
       <button onclick:="AddTodo">New!</button>
     </template>
     <script type="module">
-      import merlin from "../src/index.js"
+      import {app} from "https://cdn.jsdelivr.net/gh/marcodpt/merlin/index.min.js"
 
       const main = document.body.querySelector('main')
-      merlin({
+      app({
         node: main,
         template: document.body.querySelector('template'),
         init: [{
