@@ -144,7 +144,7 @@ original content of the `node`.
    - `init` **routeData => [state, effect?]**: 
 An optional function that will be called every time the route is started,
 returning the initial state. If not passed, `Params` from `routeData` will be
-used as the initial state.
+used as the initial `state`.
    - `view`, `update`, `done`: Exactly as defined in `app`
  - `plugins` **[routeData => {...newData, ...routeData}]**:
 An optional array of plugins, which are executed sequentially, and must return
