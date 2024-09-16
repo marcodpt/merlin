@@ -126,8 +126,9 @@ The current state when update was called. It can be any type of data.
    - `newState`:
 The new state of the `app`. It can be any type of data.
  - `view` **(state, dispatch) => data**:
-It will always use [Tint](https://github.com/marcodpt/tint) as the template
-engine, and whatever is returned in `data` will be rendered in `node`.
+An optional function that formats the `state` (and eventually applies
+`effects`) and is passed directly to [Tint](https://github.com/marcodpt/tint)
+for rendering. If omitted, `state` will be used without modifications.
  - `done` **state => ()**:
 Exactly as defined in [Raj](https://github.com/andrejewski/raj).
 Optional function that will be called to end the `app`.
