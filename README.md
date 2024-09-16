@@ -132,7 +132,7 @@ engine, and whatever is returned in `data` will be rendered in `node`.
 Exactly as defined in [Raj](https://github.com/andrejewski/raj).
 Optional function that will be called to end the `app`.
 
-### spa({node, routes, plugins})
+### spa({node, routes, plugins?})
  - `node` **DOM Node**:
 Where to mount the `spa`.
  - `routes` **{route: {template?, init, view, update, done}}**:
@@ -146,8 +146,8 @@ It needs to be a function that will be called every time the route is started,
 returning the initial state.
    - `view`, `update`, `done`: Exactly as defined in `app`
  - `plugins` **[routeData => {...newData, ...routeData}]**:
-Plugins are executed sequentially, and must return objects that properties will
-be attached to `routeData`.
+An optional array of plugins, which are executed sequentially, and must return
+objects whose properties will be attached to `routeData`.
 
 #### routeData {url, route, path, Params, query, Query, old, ...newData}
  - `url` **string**: 
