@@ -135,15 +135,16 @@ Optional function that will be called to end the `app`.
 ### spa({node, routes, plugins?})
  - `node` **DOM Node**:
 Where to mount the `spa`.
- - `routes` **{route: {template?, init, view, update, done}}**:
+ - `routes` **{route: {template?, init?, view, update, done}}**:
    - `route` **string**: Accept `*` to match any path and `:param` to declare
 variable.
    - `template` **Dom Node**: 
 A template to be rendered on the route, if nothing is passed it will use the
 original content of the `node`.
    - `init` **routeData => [state, effect?]**: 
-It needs to be a function that will be called every time the route is started,
-returning the initial state.
+An optional function that will be called every time the route is started,
+returning the initial state. If not passed, `Params` from `routeData` will be
+used as the initial state.
    - `view`, `update`, `done`: Exactly as defined in `app`
  - `plugins` **[routeData => {...newData, ...routeData}]**:
 An optional array of plugins, which are executed sequentially, and must return
