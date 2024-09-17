@@ -142,7 +142,7 @@ Returns a function that stops the `app`.
  - `node` **DOM Node**:
 Where to mount the `spa`.
  - `routes` **{route: {template?, init?, view, update, done}}**:
-   - `route` **string**: Accept `*` to match any path and `:param` to declare
+   - `route` **string**: Accepts `*` to match any path and `:param` to declare
 variable.
    - `template` **Dom Node**: 
 A template to be rendered on the route, if nothing is passed it will use the
