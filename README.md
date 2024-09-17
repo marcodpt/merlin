@@ -72,7 +72,7 @@ better than me.
 </html>
 ```
 
-## 🏆 Examples
+## 💯 Examples
  - Counter:
 [Demo](https://marcodpt.github.io/merlin/examples/counter.html)
 [Source](https://github.com/marcodpt/merlin/blob/main/examples/counter.html)
