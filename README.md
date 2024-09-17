@@ -106,7 +106,7 @@ library, you should read the
 you should read the [docs](https://marcodpt.github.io/tint/syntax/intro.html)
 for a complete reference.
 
-### app({node, template?, view?, init, update, done?})
+### app({node, template?, view?, init, update, done?}) => stop
  - `node` **DOM Node**:
 Where to mount the `app`.
  - `template` **Dom Node**:
@@ -135,8 +135,10 @@ for rendering. If omitted, `state` will be used without modifications.
  - `done` **state => ()**:
 Exactly as defined in [Raj](https://github.com/andrejewski/raj).
 Optional function that will be called to end the `app`.
+ - `stop` **() => ()**:
+Returns a function that stops the `app`.
 
-### spa({node, routes, plugins?})
+### spa({node, routes, plugins?}) => stop
  - `node` **DOM Node**:
 Where to mount the `spa`.
  - `routes` **{route: {template?, init?, view, update, done}}**:
@@ -153,6 +155,8 @@ used as the initial `state`.
  - `plugins` **[routeData => {...newData, ...routeData}]**:
 An optional array of plugins, which are executed sequentially, and must return
 objects whose properties will be attached to `routeData`.
+ - `stop` **() => ()**:
+Returns a function that stops the `spa`.
 
 #### routeData {url, route, path, Params, query, Query, old, ...newData}
  - `url` **string**: 
