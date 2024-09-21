@@ -2,10 +2,10 @@
 
   > A functional JS framework that values elegance, simplicity and minimalism. 
 
-  [Raj](https://github.com/andrejewski/raj) +
-  [Superfine](https://github.com/jorgebucaran/superfine) +
-  [Tint](https://github.com/marcodpt/tint) +
-  SPA Router =  ❤️
+  [State Management](https://github.com/andrejewski/raj) +
+  [vDom](https://github.com/jorgebucaran/superfine) +
+  [Template Engine](https://github.com/marcodpt/tint) +
+  [SPA Router](https://github.com/marcodpt/wand) =  ❤️
 
   [![bundlejs](https://deno.bundlejs.com/badge?q=https%3A%2F%2Fraw.githubusercontent.com%2Fmarcodpt%2Fmerlin%2Fmain%2Findex.js&treeshake=%5B%7Bapp%2Cspa%7D%5D)](https://bundlejs.com/?q=https%3A%2F%2Fraw.githubusercontent.com%2Fmarcodpt%2Fmerlin%2Fmain%2Findex.js&treeshake=%5B%7Bapp%2Cspa%7D%5D)
   [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
@@ -15,12 +15,14 @@
 ## ❤️ Features
  - No building tools.
  - Single HTML file by default.
+ - Built by combining ideas from small modules following the
+[UNIX philosophy](https://en.wikipedia.org/wiki/Unix_philosophy).
  - Pure functional ELM architecture state management
 [library](https://jew.ski/raj/).
  - Ultrafast [vDom](https://github.com/jorgebucaran/superfine).
- - Built-in Single Page Application Router.
  - Server side rendered by default
 ([templates](https://marcodpt.github.io/tint/syntax/intro.html) are valid html).
+ - Built-in Single Page Application [Router](https://github.com/marcodpt/wand).
  - Ridiculously small API. After reading this file you will understand `Merlin`
 better than me.
 
@@ -106,77 +108,104 @@ library, you should read the
 you should read the [docs](https://marcodpt.github.io/tint/syntax/intro.html)
 for a complete reference.
 
+`Merlin` uses [Wand](https://github.com/marcodpt/tint) as its SPA Router,
+you should read the repo for a complete reference.
+
 ### app({node, template?, view?, init, update, done?}) => stop
- - `node` **DOM Node**:
+
+#### node: DOM Node 
 Where to mount the `app`.
- - `template` **Dom Node**:
+
+#### template: Dom Node
 An optional `template` to render, if nothing is passed the `node` itself will
 be used.
- - `init` **[state, effect?]**:
+
+#### init: [state, effect?]
 Exactly as defined in [Raj](https://github.com/andrejewski/raj).
-   - `state`:
+
+##### state: _
 The initial state of the `app`. It can be any type of data.
-   - `effect` **(dispatch) => ()**:
+
+##### effect: dispatch => ()
 Optional function that introduces side effects.
-     - `dispatch` **(message) => ()**:
+
+##### dispatch: message => ()
 Function that triggers an update on the state. 
- - `update` **(message, state) => [newState, effect?]**:
+
+#### update: (message, state) => [newState, effect?]
 Exactly as defined in [Raj](https://github.com/andrejewski/raj).
-   - `message`:
+
+##### message: _
 The context of the update. It can be any type of data.
-   - `state`:
+
+##### state: _
 The current state when update was called. It can be any type of data.
-   - `newState`:
+
+##### newState: _
 The new state of the `app`. It can be any type of data.
- - `view` **(state, dispatch) => data**:
+
+#### view: (state, dispatch) => data
 An optional function that formats the `state` (and eventually applies
 `effects`) and is passed directly to [Tint](https://github.com/marcodpt/tint)
 for rendering. If omitted, `state` will be used without modifications.
- - `done` **state => ()**:
+
+#### done: state => ()
 Exactly as defined in [Raj](https://github.com/andrejewski/raj).
 Optional function that will be called to end the `app`.
- - `stop` **() => ()**:
+
+#### stop: () => ()
 Returns a function that stops the `app`.
 
 ### spa({node, routes, plugins?}) => stop
- - `node` **DOM Node**:
+
+#### node: DOM Node
 Where to mount the `spa`.
- - `routes` **{route: {template?, init?, view, update, done}}**:
-   - `route` **string**:
+
+#### routes: {route: {template?, init?, view, update, done}}
+
+##### route: string
 Accepts `*` to match any path and `:param` to declare variable.
-   - `template` **Dom Node**: 
+
+##### template: Dom Node
 A template to be rendered on the route, if nothing is passed it will use the
 original content of the `node`.
-   - `init` **routeData => [state, effect?]**: 
+
+##### init: routeData => [state, effect?] 
 An optional function that will be called every time the route is started,
 returning the initial state. If not passed, `Params` from `routeData` will be
 used as the initial `state`.
-   - `view`, `update`, `done`: Exactly as defined in `app`
- - `plugins` **[routeData => {...newData, ...routeData}]**:
-An optional array of plugins, which are executed sequentially with each route
-change and must return a object whose properties will be attached to
-`routeData`.
- - `stop` **() => ()**:
+
+##### view, update, done
+Exactly as defined in `app`
+
+#### plugins: [routeData => ()]
+An optional array of `plugins`, which are executed sequentially with each
+`route` `change` and which can modify the `routeData`.
+
+#### stop: () => ()
 Returns a function that stops the `spa`.
 
-#### routeData {url, route, path, Params, query, Query, old, ...newData}
- - `url` **string**: 
+#### routeData {url, route, path, Params, query, Query}
+`Plugins` can introduce new properties or change existing ones.
+
+##### url: string
 The `url` as it was passed.
- - `route` **string**:
+
+##### route: string
 The `route` that matched as declared.
- - `path` **string**:
+
+##### path: string
 The part of the `url` before the `?`.
- - `Params` **Object**: 
+
+##### Params: object
 Object containing the variables declared in the `route` with the associated
 values in the current `path`.
- - `query` **string**:
+
+##### query: string
 The part of `url` after the `?`.
- - `Query` **Object**:
+
+##### Query: object
 Parsed query string.
- - `old` **{url, route, path, Params, query}**:
-Previous `routeData` or `null`.
- - `newData`
-New properties introduced by plugins.
 
 ## 🤝 Contributing
 It's a very simple project.
@@ -191,6 +220,7 @@ This work is hugely influenced by these amazing projects:
  - [superfine](https://github.com/jorgebucaran/superfine)
  - [raj](https://github.com/andrejewski/raj)
  - [tint](https://github.com/marcodpt/tint)
+ - [wand](https://github.com/marcodpt/wand)
  - [hyperapp](https://github.com/jorgebucaran/hyperapp)
  - [elm](https://github.com/elm)
 
