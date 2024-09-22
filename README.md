@@ -2,7 +2,7 @@
 
   > A functional JS framework that values elegance, simplicity and minimalism. 
 
-  [State Management](https://github.com/andrejewski/raj) +
+  [State Management](https://github.com/marcodpt/ring) +
   [vDom](https://github.com/jorgebucaran/superfine) +
   [Template Engine](https://github.com/marcodpt/tint) +
   [SPA Router](https://github.com/marcodpt/wand) =  ❤️
@@ -18,7 +18,7 @@
  - Built by combining ideas from small modules following the
 [UNIX philosophy](https://en.wikipedia.org/wiki/Unix_philosophy).
  - Pure functional ELM architecture state management
-[library](https://jew.ski/raj/).
+[library](https://github.com/marcodpt/ring).
  - Ultrafast [vDom](https://github.com/jorgebucaran/superfine).
  - Server side rendered by default
 ([templates](https://marcodpt.github.io/tint/syntax/intro.html) are valid html).
@@ -99,11 +99,6 @@ better than me.
 [JS](https://github.com/marcodpt/merlin/blob/main/examples/spa.js)
 
 ## 📖 API
-
-`Merlin` uses [Raj](https://github.com/andrejewski/raj) as its state management
-library, you should read the
-[docs](https://github.com/andrejewski/raj-by-example) for a complete reference.
-
 `Merlin` uses [Tint](https://github.com/marcodpt/tint) as its template engine,
 you should read the [docs](https://marcodpt.github.io/tint/syntax/intro.html)
 for a complete reference.
@@ -121,8 +116,6 @@ An optional `template` to render, if nothing is passed the `node` itself will
 be used.
 
 #### init: [state, effect?]
-Exactly as defined in [Raj](https://github.com/andrejewski/raj).
-
 ##### state: _
 The initial state of the `app`. It can be any type of data.
 
@@ -133,8 +126,6 @@ Optional function that introduces side effects.
 Function that triggers an update on the state. 
 
 #### update: (message, state) => [newState, effect?]
-Exactly as defined in [Raj](https://github.com/andrejewski/raj).
-
 ##### message: _
 The context of the update. It can be any type of data.
 
@@ -150,7 +141,6 @@ An optional function that formats the `state` (and eventually applies
 for rendering. If omitted, `state` will be used without modifications.
 
 #### done: state => ()
-Exactly as defined in [Raj](https://github.com/andrejewski/raj).
 Optional function that will be called to end the `app`.
 
 #### stop: () => ()
@@ -219,6 +209,7 @@ way to increase evidence and attract more contributors.
 This work is hugely influenced by these amazing projects:
  - [superfine](https://github.com/jorgebucaran/superfine)
  - [raj](https://github.com/andrejewski/raj)
+ - [ring](https://github.com/marcodpt/ring)
  - [tint](https://github.com/marcodpt/tint)
  - [wand](https://github.com/marcodpt/wand)
  - [hyperapp](https://github.com/jorgebucaran/hyperapp)
