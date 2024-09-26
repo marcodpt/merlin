@@ -10,8 +10,10 @@
   </head>
   <body>
     <main>
-      <h1>Components sample</h1>
-      <comp-counter each:="" bind:=""></comp-counter>
+      <h1><img src="../favicon.ico"> Components sample</h1>
+      <div data-init="0"></div>
+      <div data-init="3"></div>
+      <div data-init="7"></div>
     </main>
     <template id="comp-counter">
       <h1>Counter: <span text:="count"></span></h1>
@@ -19,23 +21,26 @@
       <button onclick:="inc">+</button>
     </template>
     <script type="module">
-      import {app} from "../index.min.js"
+      import {app} from "../index.js"
 
-      app({
-        node: document.body.querySelector('main'),
-        init: [[0, 3, 7]],
-        update: (i, counters) => {
-          const delta = i > 0 ? 1 : -1
-          i = delta > 0 ? i - 1 : delta * i
-          counters[i] += delta
-
-          return [counters]
-        },
-        view: (counters, dispatch) => counters.map((count, i) => ({
+      const counter = component => app({
+        ...component,
+        template: document.getElementById('comp-counter'),
+        register: update => ({
+          inc: () => update(count => count + 1),
+          dec: () => update(count => count - 1)
+        }),
+        view: (count, events) => ({
           count,
-          inc: () => {dispatch(i+1)},
-          dec: () => {dispatch(-i)},
-        }))
+          ...events
+        })
+      })
+
+      document.body.querySelectorAll('[data-init]').forEach(node => {
+        counter({
+          node,
+          init: parseInt(node.getAttribute('data-init'))
+        })
       })
     </script>
   </body>

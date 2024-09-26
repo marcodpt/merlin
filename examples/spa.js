@@ -1,4 +1,4 @@
-import {spa} from "../index.min.js"
+import {spa} from "../index.js"
 
 window.stop = spa({
   node: document.body.querySelector('main'),
@@ -9,51 +9,53 @@ window.stop = spa({
     },
     '/counter/:start': {
       template: document.getElementById('view-counter'),
-      init: ({Params}) => [parseInt(Params.start)],
-      update: (message, count) => [count + (
-        message == 'inc' ? 1 :
-        message == 'dec' ? -1 : 0
-      )],
-      view: (count, dispatch) => ({
+      init: ({Params}) => parseInt(Params.start),
+      register: update => ({
+        inc: () => update(count => count + 1),
+        dec: () => update(count => count - 1)
+      }),
+      view: (count, events) => ({
         count,
-        inc: () => dispatch('inc'),
-        dec: () => dispatch('dec')
+        ...events
       })
     },
     '/todo': {
       template: document.getElementById('view-todo'),
-      init: ({Query}) => [{
+      init: ({Query}) => ({
         value: "",
         todos: Query.todos instanceof Array ? Query.todos : []
-      }],
-      update: (todo, state) => {
-        if (todo != null) {
-          state.value = todo
-        } else if (state.value) {
-          state.todos.push(state.value)
-          state.value = ""
-        }
-      
-        return [state]
-      },
-      view: (state, dispatch) => ({
+      }),
+      register: update => ({
+        NewValue: ev => update(state => ({
+          ...state,
+          value: ev.target.value
+        })),
+        AddTodo: () => update(({todos, value}) => ({
+          todos: todos.concat(value),
+          value: ''
+        }))
+      }),
+      view: (state, events) => ({
         ...state,
-        AddTodo: () => dispatch(),
-        NewValue: ev => dispatch(ev.target.value)
+        ...events
       })
     },
     '/clock': {
       template: document.getElementById('view-clock'),
-      init: () => [null, dispatch => {dispatch()}],
-      update: () => [new Date(), dispatch => {
-        setTimeout(dispatch, 100)
-      }],
+      init: () => null,
+      register: (update, dispatch) => ({
+        init: () => {
+          update(() => new Date())
+          setTimeout(() => {dispatch('init')}, 100)
+        }
+      }),
       view: time => {
         console.log('tick')
-        const format = n => (n < 10 ? '0' : '')+n
-        return !time ? '00:00:00' : format(time.getHours())+":"+
-          format(time.getMinutes())+":"+
-          format(time.getSeconds())
+        return !time ? '00:00:00' : [
+          time.getHours(),
+          time.getMinutes(),
+          time.getSeconds()
+        ].map(n => (n < 10 ? '0' : '')+n).join(':')
       }
     },
     '*': {

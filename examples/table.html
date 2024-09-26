@@ -22,23 +22,33 @@
           <tr>
             <th>Delete</th>
             <th>
-              <a href="javascript:;" onclick:="sort_id">Id</a>
+              <a href="javascript:;" onclick:="sort" data-key="id">
+                Id
+              </a>
             </th>
             <th>
-              <a href="javascript:;" onclick:="sort_name">Name</a>
+              <a href="javascript:;" onclick:="sort" data-key="name">
+                Name
+              </a>
             </th>
             <th>
-              <a href="javascript:;" onclick:="sort_age">Age</a>
+              <a href="javascript:;" onclick:="sort" data-key="age">
+                Age
+              </a>
             </th>
             <th>
-              <a href="javascript:;" onclick:="sort_balance">Balance ($)</a>
+              <a href="javascript:;" onclick:="sort" data-key="balance">
+                Balance ($)
+              </a>
             </th>
           </tr>
         </thead>
         <tbody>
-          <tr each:="rows">
+          <tr each:="data">
             <td>
-              <a href="javascript:;"  onclick:="delete">Delete</a>
+              <a href="javascript:;"  onclick:="delete" data-id:="id">
+                Delete
+              </a>
             </td>
             <td text:="id"></td>
             <td text:="name"></td>
@@ -49,11 +59,11 @@
       </table>
     </main>
     <script type="module">
-      import {app} from "../index.min.js"
+      import {app} from "../index.js"
 
       app({
         node: document.body.querySelector('main'),
-        init: [{
+        init: {
           data: [
             {
               'id': 1,
@@ -109,39 +119,40 @@
           ],
           asc: 1,
           sorted: 'id'
-        }],
-        update: (k, state) => {
-          if (typeof k == 'string') {
-            if (state.sorted == k) {
-              state.asc = -1 * state.asc
-            } else {
-              state.asc = 1
-              state.sorted = k 
-            }
-            state.data.sort(
-              (a, b) => state.asc * (a[k] < b[k] ? -1 : a[k] > b[k] ? 1 : 0)
-            )
-          } else if (typeof k == 'number' && state.data[k]) {
-            state.data.splice(k, 1)
-          }
-          return [state]
         },
-        view: ({data}, dispatch) => ({
-          rows: data.map((row, i) => ({
-            ...row,
-            delete: () => {dispatch(i)}
-          })),
+        register: (update, dispatch) => ({
+          sort: ev => update(({data, asc, sorted}) => {
+            const k = ev.target.getAttribute('data-key')
+            if (sorted == k) {
+              asc = -1 * asc
+            } else {
+              asc = 1
+              sorted = k 
+            }
+            data.sort((a, b) => asc * (a[k] < b[k] ? -1 : a[k] > b[k] ? 1 : 0))
+            return {data, asc, sorted}
+          }),
+          delete: ev => update(({data, ...state}) => {
+            const id = parseInt(ev.target.getAttribute('data-id'))
+            const index = data.reduce(
+              (index, row, i) => index < 0 && row.id == id ? i : index 
+            , -1)
+            if (index >= 0) {
+              data.splice(index, 1)
+            }
+            return {data, ...state}
+          })
+        }),
+        view: ({data}, events) => ({
+          ...events,
+          data,
           count: data.length,
           avg_age: (
             data.reduce((total, {age}) => total + age, 0) / (data.length || 1)
           ).toFixed(0),
           sum_balance: data.reduce((total, {
             balance
-          }) => total + balance, 0).toFixed(2),
-          sort_id: () => {dispatch('id')},
-          sort_age: () => {dispatch('age')},
-          sort_name: () => {dispatch('name')},
-          sort_balance: () => {dispatch('balance')}
+          }) => total + balance, 0).toFixed(2)
         })
       })
     </script>

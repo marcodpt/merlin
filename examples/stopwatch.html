@@ -10,45 +10,61 @@
   </head>
   <body>
     <main>
-      <h1>Stopwatch</h1>
+      <h1><img src="../favicon.ico"> Stopwatch</h1>
       <h2 text:="clock">0.000</h2>
       <button onclick:="start">Start</button>
       <button onclick:="stop">Stop</button>
       <button onclick:="reset">Reset</button>
     </main>
     <script type="module">
-      import {app} from "../index.min.js"
+      import {app} from "../index.js"
 
       app({
         node: document.body.querySelector('main'),
-        init: [{
+        init: {
           clock: 0,
           offset: 0
-        }],
-        update: (message, state) => {
-          console.log('tick')
-          if (message == 'reset') {
-            state.clock = 0
-          } else if (message == 'start') {
-            state.offset = Date.now()
-          } else if (message == 'stop') {
-            state.offset = 0
-          }
-
-          if (state.offset) {
-            const now = Date.now()
-            state.clock += (now - state.offset) / 1000
-            state.offset = now
-          }
-          return [state, !state.offset ? null : dispatch => {
-            setTimeout(dispatch, 100)
-          }]
         },
-        view: ({clock}, dispatch) => ({
+        register: (update, dispatch) => ({
+          reset: () => update(state => ({
+            ...state,
+            clock: 0
+          })),
+          start: () => {
+            var tick
+            update(state => {
+              tick = !state.offset
+              return {
+                ...state,
+                offset: Date.now()
+              }
+            })
+            if (tick) {
+              dispatch('tick')
+            }
+          },
+          stop: () => update(state => ({
+            ...state,
+            offset: 0
+          })),
+          tick: () => {
+            update(({offset, clock}) => {
+              if (offset) {
+                const now = Date.now()
+                setTimeout(() => dispatch('tick'), 100)
+                return {
+                  clock: clock + (now - offset) / 1000,
+                  offset: now
+                }
+              } else {
+                return {offset, clock}
+              }
+            })
+          }
+        }),
+        view: ({clock}, events) => ({
           clock: clock.toFixed(3),
-          start: () => {dispatch('start')},
-          stop: () => {dispatch('stop')},
-          reset: () => {dispatch('reset')}
+          ...events
         })
       })
     </script>

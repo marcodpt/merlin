@@ -26,31 +26,30 @@
       <button onclick:="AddTodo">New!</button>
     </template>
     <script type="module">
-      import {app} from "../index.min.js"
+      import {app} from "../index.js"
 
       const main = document.body.querySelector('main')
       app({
         node: main,
         template: document.body.querySelector('template'),
-        init: [{
-          value: "",
+        init: {
+          value: '',
           todos: Array.from(main.querySelectorAll('li'))
             .map(e => e.textContent)
-        }],
-        update: (todo, state) => {
-          if (todo != null) {
-            state.value = todo
-          } else if (state.value) {
-            state.todos.push(state.value)
-            state.value = ""
-          }
-        
-          return [state]
         },
-        view: (state, dispatch) => ({
+        register: update => ({
+          NewValue: ev => update(state => ({
+            ...state,
+            value: ev.target.value
+          })),
+          AddTodo: () => update(({todos, value}) => ({
+            todos: todos.concat(value),
+            value: ''
+          }))
+        }),
+        view: (state, events) => ({
           ...state,
-          AddTodo: () => dispatch(),
-          NewValue: ev => dispatch(ev.target.value)
+          ...events
         })
       })
     </script>

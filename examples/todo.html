@@ -10,7 +10,7 @@
   </head>
   <body>
     <main>
-      <h1>To do list</h1>
+      <h1><img src="../favicon.ico"> To do list</h1>
       <input type="text" value:="value" oninput:="NewValue">
       <ul>
         <li each:="todos" text:></li>
@@ -18,28 +18,27 @@
       <button onclick:="AddTodo">New!</button>
     </main>
     <script type="module">
-      import {app} from "../index.min.js"
+      import {app} from "../index.js"
 
       app({
         node: document.body.querySelector('main'),
-        init: [{
-          value: "",
+        init: {
+          value: '',
           todos: []
-        }],
-        update: (todo, state) => {
-          if (todo != null) {
-            state.value = todo
-          } else if (state.value) {
-            state.todos.push(state.value)
-            state.value = ""
-          }
-        
-          return [state]
         },
-        view: (state, dispatch) => ({
+        register: update => ({
+          NewValue: ev => update(state => ({
+            ...state,
+            value: ev.target.value
+          })),
+          AddTodo: () => update(({todos, value}) => ({
+            todos: todos.concat(value),
+            value: ''
+          }))
+        }),
+        view: (state, events) => ({
           ...state,
-          AddTodo: () => dispatch(),
-          NewValue: ev => dispatch(ev.target.value)
+          ...events
         })
       })
     </script>

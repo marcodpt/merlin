@@ -10,24 +10,23 @@
   </head>
   <body>
     <main>
-      <h1>Counter: <span text:="count"></span></h1>
+      <h1><img src="../favicon.ico"> Counter: <span text:="count"></span></h1>
       <button onclick:="dec">-</button>
       <button onclick:="inc">+</button>
     </main>
     <script type="module">
-      import {app} from "../index.min.js"
+      import {app} from "../index.js"
 
       app({
         node: document.body.querySelector('main'),
-        init: [0],
-        update: (message, count) => [count + (
-          message == 'inc' ? 1 :
-          message == 'dec' ? -1 : 0
-        )],
-        view: (count, dispatch) => ({
+        init: 0,
+        register: update => ({
+          inc: () => update(count => count + 1),
+          dec: () => update(count => count - 1)
+        }),
+        view: (count, events) => ({
           count,
-          inc: () => dispatch('inc'),
-          dec: () => dispatch('dec')
+          ...events
         })
       })
     </script>

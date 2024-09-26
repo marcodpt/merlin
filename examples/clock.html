@@ -10,25 +10,25 @@
   </head>
   <body>
     <main>
-      <h1>Clock</h1>
+      <h1><img src="../favicon.ico"> Clock</h1>
       <h2 text:>00:00:00</h2>
     </main>
     <script type="module">
-      import {app} from "../index.min.js"
+      import {app} from "../index.js"
 
       app({
         node: document.body.querySelector('main'),
-        init: [null, dispatch => {dispatch()}],
-        update: () => [new Date(), dispatch => {
-          setTimeout(dispatch, 100)
-        }],
-        view: time => {
-          console.log('tick')
-          const format = n => (n < 10 ? '0' : '')+n
-          return !time ? '00:00:00' : format(time.getHours())+":"+
-            format(time.getMinutes())+":"+
-            format(time.getSeconds())
-        }
+        register: (update, dispatch) => ({
+          init: () => {
+            update(() => new Date())
+            setTimeout(() => {dispatch('init')}, 100)
+          }
+        }),
+        view: time => !time ? '00:00:00' : [
+          time.getHours(),
+          time.getMinutes(),
+          time.getSeconds()
+        ].map(n => (n < 10 ? '0' : '')+n).join(':')
       })
     </script>
   </body>
