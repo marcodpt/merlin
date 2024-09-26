@@ -2,16 +2,16 @@
 
 A functional JS framework that values elegance, simplicity and minimalism. 
 
-[State Management](https://github.com/marcodpt/ring) +
-[vDom](https://github.com/jorgebucaran/superfine) +
-[Template Engine](https://github.com/marcodpt/tint) +
-[SPA Router](https://github.com/marcodpt/wand) =  ❤️
-
 
 [![Demo](https://img.shields.io/badge/Demo-blue)](https://marcodpt.github.io/merlin/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![GitHub Tag](https://img.shields.io/github/v/tag/marcodpt/merlin)](https://github.com/marcodpt/merlin/tags)
 [![bundlejs](https://deno.bundlejs.com/badge?q=https%3A%2F%2Fraw.githubusercontent.com%2Fmarcodpt%2Fmerlin%2Fmain%2Findex.js&treeshake=%5B*%5D)](https://bundlejs.com/?q=https%3A%2F%2Fraw.githubusercontent.com%2Fmarcodpt%2Fmerlin%2Fmain%2Findex.js&treeshake=%5B*%5D)
+
+[State Management](https://github.com/marcodpt/ring) +
+[vDom](https://github.com/jorgebucaran/superfine) +
+[Template Engine](https://github.com/marcodpt/tint) +
+[SPA Router](https://github.com/marcodpt/wand) =  ❤️
 
 ## ❤️ Features
  - No building tools.
@@ -120,7 +120,7 @@ The only exception is that it returns `data` that will be used for
 if not passed the unmodified `state` will be returned to
 [Tint](https://github.com/marcodpt/tint).
 
-#### init
+#### init: _
 Exactly as defined in [Ring](https://github.com/marcodpt/ring#-api).
 
 The initial `state` of the `app`. It can be any type of data.
