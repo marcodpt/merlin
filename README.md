@@ -1,16 +1,17 @@
 # ![](favicon.ico) The Merlin JS framework
 
-  > A functional JS framework that values elegance, simplicity and minimalism. 
+A functional JS framework that values elegance, simplicity and minimalism. 
 
-  [State Management](https://github.com/marcodpt/ring) +
-  [vDom](https://github.com/jorgebucaran/superfine) +
-  [Template Engine](https://github.com/marcodpt/tint) +
-  [SPA Router](https://github.com/marcodpt/wand) =  ❤️
+[State Management](https://github.com/marcodpt/ring) +
+[vDom](https://github.com/jorgebucaran/superfine) +
+[Template Engine](https://github.com/marcodpt/tint) +
+[SPA Router](https://github.com/marcodpt/wand) =  ❤️
 
-  [![bundlejs](https://deno.bundlejs.com/badge?q=https%3A%2F%2Fraw.githubusercontent.com%2Fmarcodpt%2Fmerlin%2Fmain%2Findex.js&treeshake=%5B%7Bapp%2Cspa%7D%5D)](https://bundlejs.com/?q=https%3A%2F%2Fraw.githubusercontent.com%2Fmarcodpt%2Fmerlin%2Fmain%2Findex.js&treeshake=%5B%7Bapp%2Cspa%7D%5D)
-  [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-  [Demo](https://marcodpt.github.io/merlin/)
+[![Demo](https://img.shields.io/badge/Demo-blue)](https://marcodpt.github.io/merlin/)
+[![bundlejs](https://deno.bundlejs.com/badge?q=https%3A%2F%2Fraw.githubusercontent.com%2Fmarcodpt%2Fmerlin%2Fmain%2Findex.js&treeshake=%5B*%5D)](https://bundlejs.com/?q=https%3A%2F%2Fraw.githubusercontent.com%2Fmarcodpt%2Fmerlin%2Fmain%2Findex.js&treeshake=%5B*%5D)
+[![GitHub Tag](https://img.shields.io/github/v/tag/marcodpt/merlin)](https://github.com/marcodpt/merlin/tags)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 ## ❤️ Features
  - No building tools.
@@ -27,7 +28,7 @@
 better than me.
 
 ## 💡 Showcase
-[Demo](https://marcodpt.github.io/merlin/examples/todo.html)
+[![Demo](https://img.shields.io/badge/Demo-blue)](https://marcodpt.github.io/merlin/examples/todo.html)
 
 ```html
 <!DOCTYPE html>
@@ -49,24 +50,23 @@ better than me.
 
       app({
         node: document.body.querySelector('main'),
-        init: [{
-          value: "",
+        init: {
+          value: '',
           todos: []
-        }],
-        update: (todo, state) => {
-          if (todo != null) {
-            state.value = todo
-          } else if (state.value) {
-            state.todos.push(state.value)
-            state.value = ""
-          }
-        
-          return [state]
         },
-        view: (state, dispatch) => ({
+        register: update => ({
+          NewValue: ev => update(state => ({
+            ...state,
+            value: ev.target.value
+          })),
+          AddTodo: () => update(({todos, value}) => ({
+            todos: todos.concat(value),
+            value: ''
+          }))
+        }),
+        view: (state, events) => ({
           ...state,
-          AddTodo: () => dispatch(),
-          NewValue: ev => dispatch(ev.target.value)
+          ...events
         })
       })
     </script>
@@ -76,37 +76,34 @@ better than me.
 
 ## 💯 Examples
  - Counter:
-[Demo](https://marcodpt.github.io/merlin/examples/counter.html)
-[Source](https://github.com/marcodpt/merlin/blob/main/examples/counter.html)
+[![Demo](https://img.shields.io/badge/Demo-blue)](https://marcodpt.github.io/merlin/examples/counter.html)
+[![Source](https://img.shields.io/badge/Source-gray)](https://github.com/marcodpt/merlin/blob/main/examples/counter.html)
  - Todo SSR:
-[Demo](https://marcodpt.github.io/merlin/examples/todo_ssr.html)
-[Source](https://github.com/marcodpt/merlin/blob/main/examples/todo_ssr.html)
+[![Demo](https://img.shields.io/badge/Demo-blue)](https://marcodpt.github.io/merlin/examples/todo_ssr.html)
+[![Source](https://img.shields.io/badge/Source-gray)](https://github.com/marcodpt/merlin/blob/main/examples/todo_ssr.html)
  - Clock:
-[Demo](https://marcodpt.github.io/merlin/examples/clock.html)
-[Source](https://github.com/marcodpt/merlin/blob/main/examples/clock.html)
+[![Demo](https://img.shields.io/badge/Demo-blue)](https://marcodpt.github.io/merlin/examples/clock.html)
+[![Source](https://img.shields.io/badge/Source-gray)](https://github.com/marcodpt/merlin/blob/main/examples/clock.html)
  - Stopwatch:
-[Demo](https://marcodpt.github.io/merlin/examples/stopwatch.html)
-[Source](https://github.com/marcodpt/merlin/blob/main/examples/stopwatch.html)
+[![Demo](https://img.shields.io/badge/Demo-blue)](https://marcodpt.github.io/merlin/examples/stopwatch.html)
+[![Source](https://img.shields.io/badge/Source-gray)](https://github.com/marcodpt/merlin/blob/main/examples/stopwatch.html)
  - Table:
-[Demo](https://marcodpt.github.io/merlin/examples/table.html)
-[Source](https://github.com/marcodpt/merlin/blob/main/examples/table.html)
+[![Demo](https://img.shields.io/badge/Demo-blue)](https://marcodpt.github.io/merlin/examples/table.html)
+[![Source](https://img.shields.io/badge/Source-gray)](https://github.com/marcodpt/merlin/blob/main/examples/table.html)
  - Components:
-[Demo](https://marcodpt.github.io/merlin/examples/components.html)
-[Source](https://github.com/marcodpt/merlin/blob/main/examples/components.html)
+[![Demo](https://img.shields.io/badge/Demo-blue)](https://marcodpt.github.io/merlin/examples/components.html)
+[![Source](https://img.shields.io/badge/Source-gray)](https://github.com/marcodpt/merlin/blob/main/examples/components.html)
  - SPA Router:
-[Demo](https://marcodpt.github.io/merlin/examples/spa.html)
-[HTML](https://github.com/marcodpt/merlin/blob/main/examples/spa.html)
-[JS](https://github.com/marcodpt/merlin/blob/main/examples/spa.js)
+[![Demo](https://img.shields.io/badge/Demo-blue)](https://marcodpt.github.io/merlin/examples/spa.html)
+[![HTML](https://img.shields.io/badge/HTML-red)](https://github.com/marcodpt/merlin/blob/main/examples/spa.html)
+[![JS](https://img.shields.io/badge/JS-gray)](https://github.com/marcodpt/merlin/blob/main/examples/spa.js)
 
 ## 📖 API
 `Merlin` uses [Tint](https://github.com/marcodpt/tint) as its template engine,
 you should read the [docs](https://marcodpt.github.io/tint/syntax/intro.html)
 for a complete reference.
 
-`Merlin` uses [Wand](https://github.com/marcodpt/tint) as its SPA Router,
-you should read the repo for a complete reference.
-
-### app({node, template?, view?, init, update, done?}) => stop
+### app({node, template?, view?, init, register}) => stop
 
 #### node: DOM Node 
 Where to mount the `app`.
@@ -115,43 +112,32 @@ Where to mount the `app`.
 An optional `template` to render, if nothing is passed the `node` itself will
 be used.
 
-#### init: [state, effect?]
-##### state: _
-The initial state of the `app`. It can be any type of data.
+#### view: (state, events) => data
+Exactly as defined in [Ring](https://github.com/marcodpt/ring#-api).
+The only exception is that it returns data that will be used for
+[Tint](https://github.com/marcodpt/tint) to render the page,
+if not passed the unmodified `state` will be returned to
+[Tint](https://github.com/marcodpt/tint).
 
-##### effect: dispatch => ()
-Optional function that introduces side effects.
+#### init
+Exactly as defined in [Ring](https://github.com/marcodpt/ring#-api).
+The initial `state` of the `app`. It can be any type of data.
 
-##### dispatch: message => ()
-Function that triggers an update on the state. 
-
-#### update: (message, state) => [newState, effect?]
-##### message: _
-The context of the update. It can be any type of data.
-
-##### state: _
-The current state when update was called. It can be any type of data.
-
-##### newState: _
-The new state of the `app`. It can be any type of data.
-
-#### view: (state, dispatch) => data
-An optional function that formats the `state` (and eventually applies
-`effects`) and is passed directly to [Tint](https://github.com/marcodpt/tint)
-for rendering. If omitted, `state` will be used without modifications.
-
-#### done: state => ()
-Optional function that will be called to end the `app`.
+#### register: (update, dispatch) => events
+Exactly as defined in [Ring](https://github.com/marcodpt/ring#-api).
+It is called before initializing the `app` returning the `registered`
+`events`.
 
 #### stop: () => ()
-Returns a function that stops the `app`.
+Exactly as defined in [Ring](https://github.com/marcodpt/ring#-api).
+Returns a function that `stops` the `app`.
 
 ### spa({node, routes, plugins?}) => stop
 
 #### node: DOM Node
 Where to mount the `spa`.
 
-#### routes: {route: {template?, init?, view, update, done}}
+#### routes: {route: {template?, init?, view?, register?}}
 
 ##### route: string
 Accepts `*` to match any path and `:param` to declare variable.
@@ -160,22 +146,25 @@ Accepts `*` to match any path and `:param` to declare variable.
 A template to be rendered on the route, if nothing is passed it will use the
 original content of the `node`.
 
-##### init: routeData => [state, effect?] 
+##### init: routeData => state
 An optional function that will be called every time the route is started,
 returning the initial state. If not passed, `Params` from `routeData` will be
 used as the initial `state`.
 
-##### view, update, done
+##### view, register
 Exactly as defined in `app`
 
 #### plugins: [routeData => ()]
+Exactly as defined in [Wand](https://github.com/marcodpt/wand#-api).
 An optional array of `plugins`, which are executed sequentially with each
 `route` `change` and which can modify the `routeData`.
 
 #### stop: () => ()
+Exactly as defined in [Wand](https://github.com/marcodpt/wand#-api).
 Returns a function that stops the `spa`.
 
 #### routeData {url, route, path, Params, query, Query}
+Exactly as defined in [Wand](https://github.com/marcodpt/wand#-api).
 `Plugins` can introduce new properties or change existing ones.
 
 ##### url: string
