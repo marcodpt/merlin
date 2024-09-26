@@ -9,9 +9,9 @@ A functional JS framework that values elegance, simplicity and minimalism.
 
 
 [![Demo](https://img.shields.io/badge/Demo-blue)](https://marcodpt.github.io/merlin/)
-[![bundlejs](https://deno.bundlejs.com/badge?q=https%3A%2F%2Fraw.githubusercontent.com%2Fmarcodpt%2Fmerlin%2Fmain%2Findex.js&treeshake=%5B*%5D)](https://bundlejs.com/?q=https%3A%2F%2Fraw.githubusercontent.com%2Fmarcodpt%2Fmerlin%2Fmain%2Findex.js&treeshake=%5B*%5D)
-[![GitHub Tag](https://img.shields.io/github/v/tag/marcodpt/merlin)](https://github.com/marcodpt/merlin/tags)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![GitHub Tag](https://img.shields.io/github/v/tag/marcodpt/merlin)](https://github.com/marcodpt/merlin/tags)
+[![bundlejs](https://deno.bundlejs.com/badge?q=https%3A%2F%2Fraw.githubusercontent.com%2Fmarcodpt%2Fmerlin%2Fmain%2Findex.js&treeshake=%5B*%5D)](https://bundlejs.com/?q=https%3A%2F%2Fraw.githubusercontent.com%2Fmarcodpt%2Fmerlin%2Fmain%2Findex.js&treeshake=%5B*%5D)
 
 ## ❤️ Features
  - No building tools.
@@ -114,22 +114,26 @@ be used.
 
 #### view: (state, events) => data
 Exactly as defined in [Ring](https://github.com/marcodpt/ring#-api).
-The only exception is that it returns data that will be used for
+
+The only exception is that it returns `data` that will be used for
 [Tint](https://github.com/marcodpt/tint) to render the page,
 if not passed the unmodified `state` will be returned to
 [Tint](https://github.com/marcodpt/tint).
 
 #### init
 Exactly as defined in [Ring](https://github.com/marcodpt/ring#-api).
+
 The initial `state` of the `app`. It can be any type of data.
 
 #### register: (update, dispatch) => events
 Exactly as defined in [Ring](https://github.com/marcodpt/ring#-api).
+
 It is called before initializing the `app` returning the `registered`
 `events`.
 
 #### stop: () => ()
 Exactly as defined in [Ring](https://github.com/marcodpt/ring#-api).
+
 Returns a function that `stops` the `app`.
 
 ### spa({node, routes, plugins?}) => stop
@@ -140,6 +144,8 @@ Where to mount the `spa`.
 #### routes: {route: {template?, init?, view?, register?}}
 
 ##### route: string
+Exactly as defined in [Wand](https://github.com/marcodpt/wand#-api).
+
 Accepts `*` to match any path and `:param` to declare variable.
 
 ##### template: Dom Node
@@ -156,15 +162,18 @@ Exactly as defined in `app`
 
 #### plugins: [routeData => ()]
 Exactly as defined in [Wand](https://github.com/marcodpt/wand#-api).
+
 An optional array of `plugins`, which are executed sequentially with each
 `route` `change` and which can modify the `routeData`.
 
 #### stop: () => ()
 Exactly as defined in [Wand](https://github.com/marcodpt/wand#-api).
+
 Returns a function that stops the `spa`.
 
 #### routeData {url, route, path, Params, query, Query}
 Exactly as defined in [Wand](https://github.com/marcodpt/wand#-api).
+
 `Plugins` can introduce new properties or change existing ones.
 
 ##### url: string
